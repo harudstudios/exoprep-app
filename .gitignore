@@ -1,0 +1,125 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+.fvm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# iOS build artifacts
+/ios/build/
+/ios/Flutter/App.framework
+/ios/Flutter/Flutter.framework
+/ios/Flutter/Flutter.podspec
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/ephemeral/
+/ios/ServiceDefinitions.json
+/ios/Runner/GeneratedPluginRegistrant.*
+
+# Web build artifacts
+/web/build/
+
+# Environment files
+.env*
+!.env.example
+*.env
+
+# Firebase
+firebase_options.dart
+google-services.json
+GoogleService-Info.plist
+
+# Keystore files (security)
+*.jks
+*.keystore
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.certSigningRequest
+
+# Coverage
+coverage/
+lcov.info
+test/.test_coverage.dart
+
+# Exceptions - include these files
+!android/app/google-services.json.example
+!ios/Runner/GoogleService-Info.plist.example
+
+# FVM Version Cache
+.fvm/
+
+# macOS
+.DS_Store
+
+# Test related
+.test_coverage.dart
+coverage_badge.svg
+
+# IDE related
+*.sublime-project
+*.sublime-workspace
+.vscode/settings.json
+.vscode/launch.json
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+
+# Archives
+*.tar.gz
+*.zip
+*.rar
+
+# Logs
+*.log
+logs/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
