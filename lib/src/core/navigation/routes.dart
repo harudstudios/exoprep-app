@@ -8,6 +8,7 @@ enum AppRoute {
   splash('/'),
   authentication('/authentication'),
   home('/home'),
+  selectExams('/selectExams'),
   profile('/profile'),
   settings('/profile/settings'),
   

@@ -47,7 +47,7 @@ mixin AuthenticationMixin on State<AuthenticationView> {
       );
       await Future<void>.delayed(const Duration(seconds: 1));
       if (!mounted) return;
-      context.go(AppRoute.home.path);
+      context.go(AppRoute.selectExams.path);
     } else if (_authViewModel.authState.value.status == ViewModelStatus.error &&
         _authViewModel.authState.value.type == AuthErrorType.login.toString()) {
       AppToasts.showError(
@@ -64,7 +64,18 @@ mixin AuthenticationMixin on State<AuthenticationView> {
       );
       await Future<void>.delayed(const Duration(seconds: 1));
       if (!mounted) return;
-      context.go(AppRoute.home.path);
+      if(_authViewModel.authState.value.data == true)  {
+        context.go(AppRoute.selectExams.path);
+      } else{
+        context.go(AppRoute.home.path);
+      }
+    } else if (_authViewModel.authState.value.status == ViewModelStatus.error &&
+        _authViewModel.authState.value.type == AuthSuccessType.google.toString()) {
+      AppToasts.showError(
+        context,
+        title: 'Google Authentication Failed',
+        description: '${_authViewModel.authState.value.error}',
+      );
     } else if (_authViewModel.authState.value.status == ViewModelStatus.idle &&
         _authViewModel.authState.value.data == AuthSuccessType.resetPassword.toString()) {
       AppToasts.showSuccess(
