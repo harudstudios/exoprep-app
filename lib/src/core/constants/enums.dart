@@ -6,3 +6,6 @@ enum AuthSuccessType { login, signup, google, resetPassword }
 
 enum AuthErrorType { login, signup, google, resetPassword }
 
+enum SelectExamSuccessType { examFetched, examUpdated }
+
+enum SelectExamErrorType { examFetchError, examUpdateError }

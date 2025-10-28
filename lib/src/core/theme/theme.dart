@@ -16,12 +16,15 @@ class AppTheme {
     scaffoldBackgroundColor: AppColors.lightBackgroundColor,
     textTheme: AppTextTheme.lightTextTheme,
 
+    splashColor: AppColors.primaryColor.withValues(alpha: 0.15),
+    highlightColor: AppColors.primaryColor.withValues(alpha: 0.10),
+
     // Color scheme
     colorScheme: const ColorScheme.light(
-      onSecondary: Colors.white,
       primary: AppColors.primaryColor,
-      onSurface: AppColors.lightTextColor,
-      surface: AppColors.lightSurfaceColor,
+      surface: AppColors.darkSurfaceColor,
+      onSurface: AppColors.darkTextColor,
+      onSecondary: Colors.white,
     ),
 
     // App bar theme
@@ -91,6 +94,9 @@ class AppTheme {
     scaffoldBackgroundColor: AppColors.darkBackgroundColor,
     textTheme: AppTextTheme.darkTextTheme,
 
+    splashColor: AppColors.primaryColor.withValues(alpha: 0.15),
+    highlightColor: AppColors.primaryColor.withValues(alpha: 0.10),
+
     // Color scheme
     colorScheme: const ColorScheme.dark(
       primary: AppColors.primaryColor,
@@ -138,8 +144,8 @@ class AppTheme {
     ),
 
     // Input decoration theme
-    inputDecorationTheme: InputDecorationTheme(
-      filled: true,
+    inputDecorationTheme: const InputDecorationTheme(
+      /*  filled: true,
       fillColor: AppColors.darkSurfaceColor,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
@@ -156,7 +162,7 @@ class AppTheme {
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
         borderSide: const BorderSide(color: AppColors.errorColor),
-      ),
+      ),*/
     ),
   );
 }

@@ -58,7 +58,6 @@ class _SignUpFormState extends State<SignUpForm> {
           AppStrings.appName,
           style: context.textTheme.titleLarge!.copyWith(
             fontWeight: FontWeight.w800,
-            color: Colors.black,
             letterSpacing: -0.5,
           ),
         ),
@@ -68,14 +67,12 @@ class _SignUpFormState extends State<SignUpForm> {
           "Create an account",
           style: context.textTheme.headlineSmall!.copyWith(
             fontWeight: FontWeight.w500,
-            color: Colors.black,
             letterSpacing: -0.5,
           ),
         ),
         Text(
           "Join us and start your journey today!",
           style: context.textTheme.bodyMedium!.copyWith(
-            color: Colors.grey[800],
             letterSpacing: -0.3,
           ),
         ),
@@ -182,32 +179,32 @@ class _SignUpFormState extends State<SignUpForm> {
         const SizedBox(height: 24),
 
         // Sign Up Button
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () => signUpUser(authViewModel),
-            style: ElevatedButton.styleFrom(
-              fixedSize: const Size(double.infinity, 56),
-              backgroundColor: Colors.black,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 16),
+        GestureDetector(
+          onTap: () => signUpUser(authViewModel),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            decoration: BoxDecoration(
+              color: context.isDarkMode ? Colors.white : Colors.black,
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(color: Colors.grey.shade300),
             ),
-            child: ValueListenableBuilder(
-              valueListenable: authViewModel.authState,
-              builder: (context, value, child) {
-                if (value.status == ViewModelStatus.loading) {
-                  return const CupertinoActivityIndicator(color: Colors.white);
-                }
-                return Text(
-                  "Sign Up",
-                  style: context.textTheme.titleMedium!.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                );
-              },
+            child: Center(
+              child: ValueListenableBuilder(
+                valueListenable: authViewModel.authState,
+                builder: (context, value, child) {
+                  if (value.status == ViewModelStatus.loading) {
+                    return CupertinoActivityIndicator(color: context.isDarkMode ? Colors.black : Colors.white);
+                  }
+                  return Text(
+                    "Sign Up",
+                    style: context.textTheme.titleMedium!.copyWith(
+                      color: context.isDarkMode ? Colors.black : Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -226,16 +223,14 @@ class _SignUpFormState extends State<SignUpForm> {
             label: Text(
               "Continue with Google",
               style: context.textTheme.titleMedium!.copyWith(
-                color: Colors.black87,
                 fontWeight: FontWeight.w500,
               ),
             ),
             style: OutlinedButton.styleFrom(
-              backgroundColor: Colors.grey.shade100,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
               ),
-              side: BorderSide(color: Colors.grey.shade300),
+              side: BorderSide(color: context.isDarkMode ? Colors.grey.shade800 : Colors.grey.shade300),
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
           ),
@@ -247,15 +242,12 @@ class _SignUpFormState extends State<SignUpForm> {
           child: RichText(
             text: TextSpan(
               text: "Already have an account? ",
-              style: context.textTheme.bodyMedium!.copyWith(
-                color: Colors.grey[700],
-              ),
+              style: context.textTheme.bodyMedium!.copyWith(),
               children: [
                 TextSpan(
                   recognizer: TapGestureRecognizer()..onTap = () => widget.selectedMode.value = AuthenticationMode.login,
                   text: "Log in",
                   style: context.textTheme.bodyMedium!.copyWith(
-                    color: Colors.black,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

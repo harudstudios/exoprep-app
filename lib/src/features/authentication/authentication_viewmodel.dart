@@ -18,9 +18,7 @@ class AuthenticationViewModel {
   }) : _authRepository = authRepository ?? AuthenticationRepository(),
        _userRepository = userRepository ?? UserRepository();
 
-  final ValueNotifier<ViewModelState<String>> authState = ValueNotifier(
-    ViewModelState.idle(data: ''),
-  );
+  final ValueNotifier<ViewModelState<String>> authState = ValueNotifier(ViewModelState.idle(data: ''));
   final ValueNotifier<bool> isAuthenticated = ValueNotifier(false);
 
   Future<void> login({required String email, required String password}) async {

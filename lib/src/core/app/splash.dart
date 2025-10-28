@@ -1,3 +1,5 @@
+import 'dart:developer';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:root/src/core/constants/strings.dart';
@@ -26,12 +28,19 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     _scaleController.forward();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await tokenPrint();
       await Future<void>.delayed(const Duration(seconds: 3));
       if (!mounted) return;
       final user = await context.authViewModel.getCurrentUser();
       if (!mounted) return;
       context.go(user != null ? AppRoute.home.path : AppRoute.authentication.path);
     });
+  }
+
+  Future<void> tokenPrint() async {
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user?.getIdToken();
+    log("Access Token: $idToken");
   }
 
   @override
@@ -61,7 +70,6 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                     AppStrings.appName,
                     style: context.headlineLarge!.copyWith(
                       fontWeight: FontWeight.w800,
-                      color: Colors.black,
                       letterSpacing: -0.5,
                     ),
                   ),

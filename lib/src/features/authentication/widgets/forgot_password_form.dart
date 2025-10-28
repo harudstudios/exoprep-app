@@ -74,7 +74,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
                 const SizedBox(height: 48),
                 Text(
                   "Email",
-                  style: context.bodySmall!.copyWith(fontWeight: FontWeight.w500),
+                  style: context.bodyLarge!.copyWith(fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
@@ -87,42 +87,43 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
                   controller: forgotPasswordEmailController,
                 ),
                 const SizedBox(height: 48),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      final email = forgotPasswordEmailController.text;
-                      if (email.isEmpty) {
-                        AppToasts.showWarning(
-                          context,
-                          title: 'Enter Your Email',
-                          description: 'We’ll send you a reset link once you provide your email.',
-                        );
-                        return;
-                      }
-                      widget.authViewModel.sendPasswordResetEmail(email: email);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+
+                GestureDetector(
+                  onTap: () {
+                    final email = forgotPasswordEmailController.text;
+                    if (email.isEmpty) {
+                      AppToasts.showWarning(
+                        context,
+                        title: 'Enter Your Email',
+                        description: 'We’ll send you a reset link once you provide your email.',
+                      );
+                      return;
+                    }
+                    widget.authViewModel.sendPasswordResetEmail(email: email);
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      // color: Colors.grey.shade900,
+                      border: Border.all(color: Colors.grey.shade300),
                     ),
-                    child: ValueListenableBuilder(
-                      valueListenable: widget.authViewModel.authState,
-                      builder: (context, value, child) {
-                        if (value.status == ViewModelStatus.loading) {
-                          return const CupertinoActivityIndicator(color: Colors.white);
-                        }
-                        return Text(
-                          "Reset Password",
-                          style: context.textTheme.titleMedium!.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        );
-                      },
+                    child: Center(
+                      child: ValueListenableBuilder(
+                        valueListenable: widget.authViewModel.authState,
+                        builder: (context, value, child) {
+                          if (value.status == ViewModelStatus.loading) {
+                            return const CupertinoActivityIndicator(color: Colors.white);
+                          }
+                          return Text(
+                            "Reset Password",
+                            style: context.textTheme.titleMedium!.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),

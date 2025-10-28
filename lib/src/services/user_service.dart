@@ -6,7 +6,12 @@ class UserService {
   final DioClient _dioClient = DioClient();
 
   Future<ResponseModel> createUser({required Map<String, dynamic> data}) async {
-    final response = await _dioClient.post(AppEndpoints.createUser, data: data);
+    final response = await _dioClient.post(AppEndpoints.user, data: data);
+    return ResponseModel.fromResponse(response);
+  }
+
+  Future<ResponseModel> updateUserExams({required Map<String, dynamic> data}) async {
+    final response = await _dioClient.put(AppEndpoints.user, data: data);
     return ResponseModel.fromResponse(response);
   }
 }

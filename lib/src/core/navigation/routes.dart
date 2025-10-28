@@ -4,20 +4,23 @@ import 'package:go_router/go_router.dart';
 /// Enum defining all application routes
 /// This centralizes route management and makes navigation type-safe
 enum AppRoute {
-  // Core routes
+  /* Onboarding Navigation */
   splash('/'),
   authentication('/authentication'),
-  home('/home'),
   selectExams('/selectExams'),
+
+  /* Main Navigation */
+  home('/home'),
+  productivity('/productivity'),
+  flashcards('/flashcards'),
+  leaderboard('/leaderboard'),
   profile('/profile'),
-  settings('/profile/settings'),
-  
-  // Feature routes (add your feature routes here)
-  // Example: dashboard('/dashboard'),
-  // Example: notifications('/notifications'),
-  ;
+
+  /* Nested Navigation */
+  examDashboard('examDashboard');
 
   const AppRoute(this.path);
+
   final String path;
 }
 
@@ -25,11 +28,17 @@ enum AppRoute {
 extension AppRouteNavigation on AppRoute {
   /// Navigate to this route, replacing current route
   void go(BuildContext context, {Object? extra}) => context.go(path, extra: extra);
-  
+
   /// Push this route onto the navigation stack
   void push(BuildContext context, {Object? extra}) => context.push(path, extra: extra);
-  
+
+  /// Push nested route from parent
+  void pushNested(BuildContext context, AppRoute parent, {Object? extra}) {
+    context.push('${parent.path}/$path', extra: extra);
+  }
+
   /// Push this route and remove all routes behind it
-  void pushAndClearStack(BuildContext context, {Object? extra}) => 
-      context.pushReplacement(path, extra: extra);
+  void pushAndClearStack(BuildContext context, {Object? extra}) {
+    context.pushReplacement(path, extra: extra);
+  }
 }

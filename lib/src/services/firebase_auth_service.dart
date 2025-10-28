@@ -38,12 +38,6 @@ class FirebaseAuthService {
     );
   }
 
-  Future<void> signOut() async {
-    await _firebaseAuth.signOut();
-    await _googleSignIn.signOut();
-    _signedInAccount = null;
-  }
-
   Future<UserCredential> signInWithGoogle() async {
     try {
       // Start authentication flow
@@ -66,6 +60,12 @@ class FirebaseAuthService {
     } on GoogleSignInException catch (e) {
       throw FirebaseAuthException(code: e.code.name, message: e.description);
     }
+  }
+
+  Future<void> signOut() async {
+    await _firebaseAuth.signOut();
+    await _googleSignIn.signOut();
+    _signedInAccount = null;
   }
 
   Future<String?> getAccessTokenForScopes(List<String> scopes) async {

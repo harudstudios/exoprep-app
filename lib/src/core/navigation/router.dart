@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:root/src/core/app/landing.dart';
 import 'package:root/src/core/app/splash.dart';
-import 'package:root/src/core/extensions/app_scope_extension.dart';
 import 'package:root/src/core/navigation/route_transition.dart';
 import 'package:root/src/core/navigation/routes.dart';
 import 'package:root/src/features/authentication/authentication_view.dart';
+import 'package:root/src/features/flashcards/flashcards_view.dart';
+import 'package:root/src/features/home/home_view.dart';
+import 'package:root/src/features/leaderboard/leaderboard_view.dart';
+import 'package:root/src/features/productivity/productivity_view.dart';
+import 'package:root/src/features/profile/profile_view.dart';
+import 'package:root/src/features/select_exams/select_exams_view.dart';
 
 /// Global router configuration for the application
 /// This handles all navigation routing and transitions
-final router = GoRouter(
-  // Initial route when app starts
-  initialLocation: AppRoute.splash.path,
 
-  // Route definitions
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _shellNavigatorHomeKey = GlobalKey<NavigatorState>(debugLabel: 'home');
+
+final router = GoRouter(
+  initialLocation: AppRoute.splash.path,
+  navigatorKey: _rootNavigatorKey,
   routes: [
-    // Splash Screen Route
     GoRoute(
       name: AppRoute.splash.name,
       path: AppRoute.splash.path,
@@ -38,66 +45,84 @@ final router = GoRouter(
       },
     ),
 
-    // Home Screen Route
-    GoRoute(
-      name: AppRoute.home.name,
-      path: AppRoute.home.path,
-      pageBuilder: (context, state) {
-        return AppRouteTransition.defaultPageTransition(
-          child: const HomeScreen(),
-          key: state.pageKey,
-        );
-      },
-    ),
-
     GoRoute(
       name: AppRoute.selectExams.name,
       path: AppRoute.selectExams.path,
       pageBuilder: (context, state) {
         return AppRouteTransition.defaultPageTransition(
-          child: const Scaffold(),
+          child: const SelectExamsView(),
           key: state.pageKey,
         );
       },
     ),
 
-    // Profile Routes Group
-    /*GoRoute(
-      name: AppRoute.profile.name,
-      path: AppRoute.profile.path,
-      pageBuilder: (context, state) {
-        return AppRouteTransition.defaultPageTransition(
-          child: const ProfileScreen(),
-          key: state.pageKey,
-        );
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) {
+        return Landing(navigationShell: navigationShell);
       },
-      routes: [
-        // Nested route for settings
-        GoRoute(
-          name: AppRoute.settings.name,
-          path: '/settings',
-          pageBuilder: (context, state) {
-            return AppRouteTransition.slideFromRight(
-              child: const SettingsScreen(),
-              key: state.pageKey,
-            );
-          },
+      branches: [
+        /* Home */
+        StatefulShellBranch(
+          navigatorKey: _shellNavigatorHomeKey,
+          routes: [
+            GoRoute(
+              path: AppRoute.home.path,
+              pageBuilder: (context, state) => const NoTransitionPage(child: HomeView()),
+              routes: [
+                GoRoute(
+                  path: AppRoute.examDashboard.path,
+                  pageBuilder: (context, state) => AppRouteTransition.slideFromRight(
+                    child: const DetailsScreen(),
+                    key: state.pageKey,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+
+        /* Productivity */
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoute.productivity.path,
+              pageBuilder: (context, state) => const NoTransitionPage(child: ProductivityView()),
+              // routes: [] for nested navigation
+            ),
+          ],
+        ),
+
+        /* Flashcards */
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoute.flashcards.path,
+              pageBuilder: (context, state) => const NoTransitionPage(child: FlashcardsView()),
+            ),
+          ],
+        ),
+
+        /* Leaderboard */
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoute.leaderboard.path,
+              pageBuilder: (context, state) => const NoTransitionPage(child: LeaderboardView()),
+            ),
+          ],
+        ),
+
+        /* Profile */
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoute.profile.path,
+              pageBuilder: (context, state) => const NoTransitionPage(child: ProfileView()),
+            ),
+          ],
         ),
       ],
-    ),*/
-
-    /* ADD YOUR FEATURE ROUTES HERE */
-    // Example:
-    // GoRoute(
-    //   name: AppRoute.dashboard.name,
-    //   path: AppRoute.dashboard.path,
-    //   pageBuilder: (context, state) {
-    //     return AppRouteTransition.defaultPageTransition(
-    //       child: const DashboardScreen(),
-    //       key: state.pageKey,
-    //     );
-    //   },
-    // ),
+    ),
   ],
 
   // Error handling
@@ -109,24 +134,40 @@ final router = GoRouter(
   },*/
 );
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class RootScreen extends StatelessWidget {
+  const RootScreen({required this.label, required this.detailsPath, super.key});
+
+  final String label;
+  final String detailsPath;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home Screen'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              context.authViewModel.logout();
-              context.go(AppRoute.authentication.path);
-            },
-            icon: const Icon(Icons.logout),
-          ),
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Root $label'),
+            ElevatedButton(
+              onPressed: () {
+                context.push('/a/details');
+              },
+              child: const Text('View Details'),
+            ),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+class DetailsScreen extends StatelessWidget {
+  const DetailsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Detail Screen')),
     );
   }
 }

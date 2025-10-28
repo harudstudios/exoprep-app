@@ -53,7 +53,6 @@ class _LoginFormState extends State<LoginForm> {
           AppStrings.appName,
           style: context.titleLarge!.copyWith(
             fontWeight: FontWeight.w800,
-            color: Colors.black,
             letterSpacing: -0.5,
           ),
         ),
@@ -63,7 +62,6 @@ class _LoginFormState extends State<LoginForm> {
           "Log in to your account",
           style: context.headlineSmall!.copyWith(
             fontWeight: FontWeight.w500,
-            color: Colors.black,
             letterSpacing: -0.5,
           ),
         ),
@@ -71,7 +69,6 @@ class _LoginFormState extends State<LoginForm> {
         Text(
           "Welcome back! Please enter your details.",
           style: context.bodyMedium!.copyWith(
-            color: Colors.grey[800],
             letterSpacing: -0.3,
           ),
         ),
@@ -133,7 +130,6 @@ class _LoginFormState extends State<LoginForm> {
               child: Text(
                 "Forgot Password",
                 style: context.bodySmall!.copyWith(
-                  color: Colors.black,
                   decoration: TextDecoration.underline,
                 ),
               ),
@@ -143,31 +139,32 @@ class _LoginFormState extends State<LoginForm> {
         const SizedBox(height: 24),
 
         // Login Button
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () => loginUser(authViewModel),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.black,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 16),
+        GestureDetector(
+          onTap: () => loginUser(authViewModel),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            decoration: BoxDecoration(
+              color: context.isDarkMode ? Colors.white : Colors.black,
+              border: Border.all(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.circular(30),
             ),
-            child: ValueListenableBuilder(
-              valueListenable: authViewModel.authState,
-              builder: (context, value, child) {
-                if (value.status == ViewModelStatus.loading) {
-                  return const CupertinoActivityIndicator(color: Colors.white);
-                }
-                return Text(
-                  "Login",
-                  style: context.textTheme.titleMedium!.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                );
-              },
+            child: Center(
+              child: ValueListenableBuilder(
+                valueListenable: authViewModel.authState,
+                builder: (context, value, child) {
+                  if (value.status == ViewModelStatus.loading) {
+                    return CupertinoActivityIndicator(color: context.isDarkMode ? Colors.black : Colors.white);
+                  }
+                  return Text(
+                    "Login",
+                    style: context.titleMedium!.copyWith(
+                      color: context.isDarkMode ? Colors.black : Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -186,16 +183,14 @@ class _LoginFormState extends State<LoginForm> {
             label: Text(
               "Continue with Google",
               style: context.titleMedium!.copyWith(
-                color: Colors.black87,
                 fontWeight: FontWeight.w500,
               ),
             ),
             style: OutlinedButton.styleFrom(
-              backgroundColor: Colors.grey.shade100,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
               ),
-              side: BorderSide(color: Colors.grey.shade300),
+              side: BorderSide(color: context.isDarkMode ? Colors.grey.shade800 : Colors.grey.shade300),
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
           ),
@@ -207,15 +202,12 @@ class _LoginFormState extends State<LoginForm> {
           child: RichText(
             text: TextSpan(
               text: "Don’t have an account? ",
-              style: context.bodyMedium!.copyWith(
-                color: Colors.grey[700],
-              ),
+              style: context.bodyMedium!.copyWith(),
               children: [
                 TextSpan(
                   recognizer: TapGestureRecognizer()..onTap = () => widget.selectedMode.value = AuthenticationMode.signup,
                   text: "Sign up",
                   style: context.bodyMedium!.copyWith(
-                    color: Colors.black,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
