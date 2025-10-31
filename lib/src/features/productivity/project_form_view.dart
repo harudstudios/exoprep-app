@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:root/src/core/common/ui/widgets/theme_toggle_switch.dart';
 import 'package:root/src/core/extensions/context_extension.dart';
+import 'package:root/src/features/productivity/project_form/project_name.dart';
+import 'package:root/src/features/productivity/project_form/time_goal_section.dart';
 
 class ProjectFormView extends StatefulWidget {
   const ProjectFormView({super.key});
@@ -24,50 +26,59 @@ class _ProjectFormViewState extends State<ProjectFormView> {
     final isDarkMode = context.isDarkMode;
 
     return Scaffold(
-      backgroundColor: isDarkMode ? const Color(0xFF121212) : Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leadingWidth: 200,
-        leading: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          child: Text(
-            'New project',
-            style: context.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              context.pop();
-            },
-            child: Container(
-              height: 36,
-              width: 36,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: context.isDarkMode
-                    ? Colors.grey.shade800
-                    : Colors.grey.shade100,
-                border: Border.all(
-                  color: context.isDarkMode
-                      ? Colors.grey.shade700
-                      : Colors.grey.shade300,
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              elevation: 0,
+              pinned: true,
+              leadingWidth: 200,
+              leading: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 12,
+                ),
+                child: Text(
+                  'New project',
+                  style: context.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: isDarkMode ? Colors.white : Colors.black,
+                  ),
                 ),
               ),
-              child: const Icon(IonIcons.close, size: 22),
+              actions: [
+                GestureDetector(
+                  onTap: () {
+                    context.pop();
+                  },
+                  child: Container(
+                    height: 36,
+                    width: 36,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: isDarkMode
+                          ? Colors.grey.shade800
+                          : Colors.grey.shade100,
+                      border: Border.all(
+                        color: isDarkMode
+                            ? Colors.grey.shade700
+                            : Colors.grey.shade300,
+                      ),
+                    ),
+                    child: const Icon(IonIcons.close, size: 22),
+                  ),
+                ),
+                const SizedBox(width: 12),
+              ],
             ),
-          ),
-          const SizedBox(
-            width: 12,
-          ),
-        ],
-      ),
-      body: const SafeArea(
-        child: Column(
-          children: [],
+            const SliverToBoxAdapter(
+              child: SizedBox(height: 12),
+            ),
+
+            ProjectName(projectName: _projectNameController),
+
+            const SliverToBoxAdapter(child: TimeGoalWidget()),
+          ],
         ),
       ),
       floatingActionButton: const ThemeToggleSwitch(),

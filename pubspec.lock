@@ -281,6 +281,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.7"
+  expandable:
+    dependency: "direct main"
+    description:
+      name: expandable
+      sha256: "9604d612d4d1146dafa96c6d8eec9c2ff0994658d6d09fed720ab788c7f5afc2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -944,6 +952,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  simple_gesture_detector:
+    dependency: transitive
+    description:
+      name: simple_gesture_detector
+      sha256: ba2cd5af24ff20a0b8d609cec3f40e5b0744d2a71804a2616ae086b9c19d19a3
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -1045,6 +1061,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.0"
+  table_calendar:
+    dependency: "direct main"
+    description:
+      name: table_calendar
+      sha256: "0c0c6219878b363a2d5f40c7afb159d845f253d061dc3c822aa0d5fe0f721982"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.0"
   talker_logger:
     dependency: "direct main"
     description:
