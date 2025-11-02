@@ -1,22 +1,12 @@
 // project_model.dart
 
 import 'package:flutter/material.dart';
-
-enum TimeGoalFrequency {
-  onetime,
-  recurring,
-}
-
-enum TimeGoalRepeatingFrequency {
-  daily,
-  weekly,
-  monthly,
-}
+import 'package:root/src/core/constants/enums.dart';
 
 @immutable
 class ProjectModel {
-  final int id;
-  final String projectName;
+  final int? id;
+  final String? projectName;
   final bool hasTimeGoal;
   final int? timeGoalDurationMinutes;
   final TimeGoalFrequency? timeGoalFrequency;
@@ -24,12 +14,12 @@ class ProjectModel {
   final DateTime? timeGoalOneTimeStartDate;
   final bool timeGoalOneTimeHasDeadlineDate;
   final DateTime? timeGoalOneTimeDeadlineDate;
-  final int tagColor;
+  final int? tagColor;
 
   const ProjectModel({
-    required this.id,
-    required this.projectName,
-    required this.tagColor,
+    this.projectName,
+    this.tagColor = 0xFF42A5F5,
+    this.id,
     this.hasTimeGoal = false,
     this.timeGoalDurationMinutes,
     this.timeGoalFrequency,

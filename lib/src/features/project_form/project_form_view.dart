@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:root/src/core/common/ui/widgets/theme_toggle_switch.dart';
 import 'package:root/src/core/extensions/app_scope_extension.dart';
 import 'package:root/src/core/extensions/context_extension.dart';
 import 'package:root/src/core/logger/logger.dart';
 import 'package:root/src/features/productivity/productivity_viewmodel.dart';
+import 'package:root/src/features/project_form/project_form_viewmodel.dart';
 import 'package:root/src/features/project_form/widgets/color_panel_picker.dart';
 import 'package:root/src/features/project_form/widgets/project_name.dart';
 import 'package:root/src/features/project_form/widgets/time_goal_section.dart';
@@ -23,7 +24,7 @@ class _ProjectFormViewState extends State<ProjectFormView>
   @override
   Widget build(BuildContext context) {
     final isDarkMode = context.isDarkMode;
-
+    final viewModel = ProjectViewModel();
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
@@ -48,6 +49,8 @@ class _ProjectFormViewState extends State<ProjectFormView>
               actions: [
                 GestureDetector(
                   onTap: () {
+                    HapticFeedback.lightImpact();
+                    ProjectViewModel.reset();
                     context.pop();
                   },
                   child: Container(
@@ -78,20 +81,41 @@ class _ProjectFormViewState extends State<ProjectFormView>
 
             const SliverToBoxAdapter(child: TimeGoalWidget()),
 
-            SliverToBoxAdapter(
-              child: ColorPickerPanel(
-                selectedColorValue: 0xFF42A5F5,
-                onColorSelected: (colorValue) {
-                  debugPrint('Selected color: $colorValue');
-                  // Save to database here
-                  // saveColorToDatabase(colorValue);
-                },
-              ),
+            const SliverToBoxAdapter(
+              child: ColorPickerPanel(),
             ),
           ],
         ),
       ),
-      floatingActionButton: const ThemeToggleSwitch(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: ValueListenableBuilder(
+        valueListenable: viewModel.colorTag,
+        builder: (context, value, child) {
+          return ElevatedButton(
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              viewModel.saveProject(projectNameController.text);
+            },
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusGeometry.circular(14),
+              ),
+              fixedSize: Size(
+                MediaQuery.widthOf(context) - 50,
+                60,
+              ),
+              backgroundColor: Color(viewModel.colorTag.value),
+            ),
+            child: Text(
+              'Save',
+              style: context.titleLarge!.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

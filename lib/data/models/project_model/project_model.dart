@@ -1,4 +1,5 @@
 import 'package:isar_community/isar.dart';
+import 'package:root/src/core/constants/enums.dart';
 
 part 'project_model.g.dart';
 
@@ -55,15 +56,4 @@ class ProjectModel {
         ? Duration(minutes: timeGoalDurationMinutes!)
         : null;
   }
-}
-
-enum TimeGoalFrequency {
-  onetime,
-  recurring,
-}
-
-enum TimeGoalRepeatingFrequency {
-  daily,
-  weekly,
-  monthly,
 }

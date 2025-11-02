@@ -1,6 +1,7 @@
 import 'package:isar_community/isar.dart';
 import 'package:root/data/local/database/isar_database.dart';
 import 'package:root/data/models/project_model/project_model.dart';
+import 'package:root/src/core/constants/enums.dart';
 
 class ProjectLocalService {
   late final Isar _isar;

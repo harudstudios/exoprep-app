@@ -1,13 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:root/src/core/extensions/context_extension.dart';
+import 'package:root/src/features/project_form/project_form_viewmodel.dart';
 
 class ColorPickerPanel extends StatefulWidget {
-  final int? selectedColorValue;
-  final ValueChanged<int> onColorSelected;
-
   const ColorPickerPanel({
-    required this.onColorSelected,
-    this.selectedColorValue,
     super.key,
   });
 
@@ -16,7 +14,7 @@ class ColorPickerPanel extends StatefulWidget {
 }
 
 class _ColorPickerPanelState extends State<ColorPickerPanel> {
-  late int selectedColorValue;
+  final viewmodel = ProjectViewModel();
 
   static const List<int> colorValues = [
     0xFFFF6B6B,
@@ -40,7 +38,6 @@ class _ColorPickerPanelState extends State<ColorPickerPanel> {
   @override
   void initState() {
     super.initState();
-    selectedColorValue = widget.selectedColorValue ?? 0xFF42A5F5;
   }
 
   int _getCrossAxisCount(BuildContext context) {
@@ -52,43 +49,46 @@ class _ColorPickerPanelState extends State<ColorPickerPanel> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(
-        color: context.isDarkMode
-            ? const Color(0xFF3A3A3A)
-            : Colors.grey.shade100,
+    return ValueListenableBuilder(
+      valueListenable: viewmodel.colorTag,
+      builder: (context, value, child) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          margin: const EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            color: context.isDarkMode
+                ? const Color(0xFF3A3A3A)
+                : Colors.grey.shade100,
 
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: _getCrossAxisCount(context),
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 12,
-        ),
-        itemCount: colorValues.length,
-        itemBuilder: (context, index) {
-          final colorValue = colorValues[index];
-          final isSelected = colorValue == selectedColorValue;
-
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedColorValue = colorValue;
-              });
-              widget.onColorSelected(colorValue);
-            },
-            child: ColorCircle(
-              color: Color(colorValue),
-              isSelected: isSelected,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: _getCrossAxisCount(context),
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
             ),
-          );
-        },
-      ),
+            itemCount: colorValues.length,
+            itemBuilder: (context, index) {
+              final colorValue = colorValues[index];
+              final isSelected = colorValue == viewmodel.colorTag.value;
+
+              return GestureDetector(
+                onTap: () {
+                  viewmodel.colorTag.value = colorValue;
+                  log('Selected Colors is:${viewmodel.colorTag.value}');
+                },
+                child: ColorCircle(
+                  color: Color(colorValue),
+                  isSelected: isSelected,
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

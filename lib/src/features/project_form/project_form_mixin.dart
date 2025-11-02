@@ -15,6 +15,7 @@ mixin ProductivityMixin on State<ProjectFormView> {
         _handleProductivityStateChange,
       );
     });
+    ProjectViewModel();
     _initService();
     super.initState();
   }
