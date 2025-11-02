@@ -14,7 +14,7 @@ class ProjectModel {
   final DateTime? timeGoalOneTimeStartDate;
   final bool timeGoalOneTimeHasDeadlineDate;
   final DateTime? timeGoalOneTimeDeadlineDate;
-  final int? tagColor;
+  final int tagColor;
 
   const ProjectModel({
     this.projectName,

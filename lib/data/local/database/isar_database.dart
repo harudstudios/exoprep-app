@@ -19,7 +19,7 @@ class IsarDatabase {
       _instance = await Isar.open(
         [ProjectSchemaModelSchema],
         directory: dir.path,
-        name: 'app_database', // Database name
+        name: 'app_database',
       );
 
       log('✅ Isar Database initialized successfully');

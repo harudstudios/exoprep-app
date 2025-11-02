@@ -5,10 +5,16 @@ import 'package:root/src/core/constants/enums.dart';
 
 class ProjectLocalService {
   late final Isar _isar;
+  bool _isInitialized = false;
 
   // Initialize service
   Future<void> initialize() async {
+    if (_isInitialized) {
+      return;
+    }
+
     _isar = await IsarDatabase.getInstance();
+    _isInitialized = true;
   }
 
   // CREATE - Add new project

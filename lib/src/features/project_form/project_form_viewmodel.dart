@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:root/src/core/common/state/viewmodel_state.dart';
 import 'package:root/src/core/constants/enums.dart';
+import 'package:root/src/core/navigation/router.dart';
 import 'package:root/src/models/project_model/project_model.dart';
 import 'package:root/src/repositories/productivity_project_repository.dart';
 
@@ -51,7 +52,7 @@ class ProjectViewModel {
       );
 
   final ValueNotifier<DateTime> oneTimeGoalStartDate = ValueNotifier(
-    DateTime.now(),
+    DateTime.now().add(const Duration(hours: 1)),
   );
   final ValueNotifier<bool> oneTimeHasDeadline = ValueNotifier(false);
   final ValueNotifier<DateTime> oneTimeDeadlineDate = ValueNotifier(
@@ -141,6 +142,12 @@ class ProjectViewModel {
 
       log('✅ Project saved: ${model.projectName}');
       log('📋 Model: $model');
+
+      await _projectProductivityRepository.saveProjectFromViewModel(
+        model,
+      );
+      reset();
+      router.pop();
     } catch (e) {
       log('❌ Error saving project: $e');
       projectFormState.value = ViewModelState.error(
