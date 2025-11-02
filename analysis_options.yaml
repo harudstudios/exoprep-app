@@ -28,6 +28,10 @@ linter:
     discarded_futures: false
     avoid_print: true
 
+    unnecessary_await_in_return: false
+    prefer_final_in_for_each: false
+    cascade_invocations: false
+
     # Code organization
     avoid_function_literals_in_foreach_calls: true
     prefer_for_elements_to_map_fromIterable: true

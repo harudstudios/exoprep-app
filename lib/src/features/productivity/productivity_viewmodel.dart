@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:root/src/core/common/state/viewmodel_state.dart';
 
 import 'package:root/src/core/logger/logger.dart';
-import 'package:root/src/repositories/productivity_repository.dart';
+import 'package:root/src/repositories/productivity_project_repository.dart';
 
 class ProductivityViewModel {
   // ignore: unused_field
-  final ProductivityRepository _productivityRepository;
+  final ProductivityProjectRepository _productivityProjectRepository;
 
   ProductivityViewModel({
-    ProductivityRepository? productivityRepository,
-  }) : _productivityRepository =
-           productivityRepository ?? ProductivityRepository();
+    ProductivityProjectRepository? productivityRepository,
+  }) : _productivityProjectRepository =
+           productivityRepository ?? ProductivityProjectRepository();
 
   final ValueNotifier<ViewModelState<dynamic>> productivityState =
       ValueNotifier(ViewModelState.idle());

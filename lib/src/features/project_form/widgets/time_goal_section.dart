@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:root/src/core/common/ui/widgets/cupertino_time_picker.dart';
 import 'package:root/src/core/common/ui/widgets/dotted_line.dart';
 import 'package:root/src/core/extensions/context_extension.dart';
-import 'package:root/src/features/productivity/project_form/project_frequency.dart';
-import 'package:root/src/features/productivity/project_form/time_goal_header.dart';
+import 'package:root/src/features/project_form/widgets/project_frequency.dart';
+import 'package:root/src/features/project_form/widgets/time_goal_header.dart';
 
 class TimeGoalWidget extends StatefulWidget {
   const TimeGoalWidget({super.key});

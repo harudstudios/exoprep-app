@@ -9,8 +9,8 @@ import 'package:root/src/features/flashcards/flashcards_view.dart';
 import 'package:root/src/features/home/home_view.dart';
 import 'package:root/src/features/leaderboard/leaderboard_view.dart';
 import 'package:root/src/features/productivity/productivity_view.dart';
-import 'package:root/src/features/productivity/project_form_view.dart';
 import 'package:root/src/features/profile/profile_view.dart';
+import 'package:root/src/features/project_form/project_form_view.dart';
 import 'package:root/src/features/select_exams/select_exams_view.dart';
 
 /// Global router configuration for the application

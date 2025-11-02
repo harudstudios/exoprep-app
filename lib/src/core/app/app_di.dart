@@ -4,7 +4,7 @@ import 'package:root/src/core/common/listeners/auth_listener.dart';
 import 'package:root/src/features/authentication/authentication_viewmodel.dart';
 import 'package:root/src/features/productivity/productivity_viewmodel.dart';
 import 'package:root/src/repositories/authentication_repository.dart';
-import 'package:root/src/repositories/productivity_repository.dart';
+import 'package:root/src/repositories/productivity_project_repository.dart';
 import 'package:root/src/repositories/user_repository.dart';
 import 'package:root/src/services/firebase_auth_service.dart';
 import 'package:root/src/services/productivity_service.dart';
@@ -18,14 +18,14 @@ class AppDI extends StatelessWidget {
   Widget build(BuildContext context) {
     //!----- Services -----//
     final firebaseAuthService = FirebaseAuthService();
-    final productivityService = ProductivityService();
+    final productivityProjectService = ProductivityService();
 
     //!----- Repositories -----//
     final authRepository = AuthenticationRepository(
       authService: firebaseAuthService,
     );
-    final productivityRepository = ProductivityRepository(
-      productivityService: productivityService,
+    final productivityProjectRepository = ProductivityProjectRepository(
+      productivityProjectService: productivityProjectService,
     );
 
     final userRepository = UserRepository();
@@ -37,7 +37,7 @@ class AppDI extends StatelessWidget {
     );
 
     final productivityViewModel = ProductivityViewModel(
-      productivityRepository: productivityRepository,
+      productivityRepository: productivityProjectRepository,
     );
 
     return AppScope(

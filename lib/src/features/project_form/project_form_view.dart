@@ -5,9 +5,9 @@ import 'package:root/src/core/extensions/app_scope_extension.dart';
 import 'package:root/src/core/extensions/context_extension.dart';
 import 'package:root/src/core/logger/logger.dart';
 import 'package:root/src/features/productivity/productivity_viewmodel.dart';
-import 'package:root/src/features/productivity/project_form/color_panel_picker.dart';
-import 'package:root/src/features/productivity/project_form/project_name.dart';
-import 'package:root/src/features/productivity/project_form/time_goal_section.dart';
+import 'package:root/src/features/project_form/widgets/color_panel_picker.dart';
+import 'package:root/src/features/project_form/widgets/project_name.dart';
+import 'package:root/src/features/project_form/widgets/time_goal_section.dart';
 
 part 'project_form_mixin.dart';
 
