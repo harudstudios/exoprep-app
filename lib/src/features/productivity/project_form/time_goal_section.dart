@@ -55,6 +55,7 @@ class _TimeGoalWidgetState extends State<TimeGoalWidget> {
           hasIcon: false,
           tapBodyToCollapse: false,
           tapBodyToExpand: false,
+          tapHeaderToExpand: false,
           animationDuration: Duration(milliseconds: 500),
         ),
         header: TimeGoalHeader(

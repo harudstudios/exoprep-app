@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:root/src/core/common/ui/widgets/theme_toggle_switch.dart';
+import 'package:root/src/core/extensions/app_scope_extension.dart';
 import 'package:root/src/core/extensions/context_extension.dart';
+import 'package:root/src/core/logger/logger.dart';
+import 'package:root/src/features/productivity/productivity_viewmodel.dart';
 import 'package:root/src/features/productivity/project_form/color_panel_picker.dart';
 import 'package:root/src/features/productivity/project_form/project_name.dart';
 import 'package:root/src/features/productivity/project_form/time_goal_section.dart';
+
+part 'project_form_mixin.dart';
 
 class ProjectFormView extends StatefulWidget {
   const ProjectFormView({super.key});
@@ -13,15 +18,8 @@ class ProjectFormView extends StatefulWidget {
   State<ProjectFormView> createState() => _ProjectFormViewState();
 }
 
-class _ProjectFormViewState extends State<ProjectFormView> {
-  final TextEditingController _projectNameController = TextEditingController();
-
-  @override
-  void dispose() {
-    _projectNameController.dispose();
-    super.dispose();
-  }
-
+class _ProjectFormViewState extends State<ProjectFormView>
+    with ProductivityMixin {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = context.isDarkMode;
@@ -76,7 +74,7 @@ class _ProjectFormViewState extends State<ProjectFormView> {
               child: SizedBox(height: 12),
             ),
 
-            ProjectName(projectName: _projectNameController),
+            ProjectName(projectName: projectNameController),
 
             const SliverToBoxAdapter(child: TimeGoalWidget()),
 
