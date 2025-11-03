@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:root/src/core/extensions/context_extension.dart';
+import 'package:root/src/core/extensions/string_extensions.dart';
+import 'package:root/src/models/project_model/project_model.dart';
 
 class ProjectListTile extends StatelessWidget {
-  const ProjectListTile({super.key});
+  const ProjectListTile({
+    required this.projectModel,
+    super.key,
+  });
+  final ProjectModel projectModel;
 
   @override
   Widget build(BuildContext context) {
@@ -14,12 +20,12 @@ class ProjectListTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(22),
       ),
 
-      child: const Row(
+      child: Row(
         children: [
           CircleAvatar(
             radius: 28,
-            backgroundColor: Colors.cyan,
-            child: Icon(
+            backgroundColor: Color(projectModel.tagColor),
+            child: const Icon(
               Icons.play_arrow,
               color: Colors.white,
               size: 36,
@@ -27,9 +33,10 @@ class ProjectListTile extends StatelessWidget {
           ),
 
           ProjectTileMiddleSection(
-            projectName: 'Pomodoro',
-            timeSpent: '0h 02m',
+            projectName: projectModel.projectName ?? 'N/A',
+            timeSpent: '0h 00m',
             totalTime: '0h 01m',
+            colorTag: projectModel.tagColor,
             progress: 0.8,
           ),
         ],
@@ -44,6 +51,7 @@ class ProjectTileMiddleSection extends StatelessWidget {
     required this.timeSpent,
     required this.totalTime,
     required this.progress,
+    required this.colorTag,
     super.key,
   });
 
@@ -51,6 +59,7 @@ class ProjectTileMiddleSection extends StatelessWidget {
   final String timeSpent;
   final String totalTime;
   final double progress;
+  final int colorTag;
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +76,11 @@ class ProjectTileMiddleSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  projectName,
+                  projectName.capitalizeEachWord(),
                   style: context.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFFB8935E),
+                    fontWeight: FontWeight.bold,
+                    // color: const Color(0xFFB8935E),
+                    color: Color(colorTag),
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -99,9 +109,10 @@ class ProjectTileMiddleSection extends StatelessWidget {
                           ? Colors.grey.shade800
                           : Colors.grey.shade300,
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        isDarkMode
-                            ? const Color(0xFFD4AF76)
-                            : const Color(0xFFB8935E),
+                        // isDarkMode
+                        //     ? const Color(0xFFD4AF76)
+                        //     : const Color(0xFFB8935E),
+                        Color(colorTag),
                       ),
                     ),
                   ),
@@ -110,8 +121,7 @@ class ProjectTileMiddleSection extends StatelessWidget {
                 Text(
                   '${(progress * 100).toInt()}%',
                   style: context.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFFB8935E),
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],

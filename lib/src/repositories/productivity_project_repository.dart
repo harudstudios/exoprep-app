@@ -32,4 +32,14 @@ class ProductivityProjectRepository {
       log('❌ Error saving project: $e');
     }
   }
+
+  // ⭐ Stream projects created after today's 12:01 AM or specific date
+  Stream<List<ProjectModel>> watchProjects({DateTime? date}) {
+    return _productivityService.watchProjectsStream(date: date);
+  }
+
+  // ⭐ Stream projects for specific date
+  Stream<List<ProjectModel>> watchProjectsForDate(DateTime date) {
+    return _productivityService.watchProjectsForDate(date);
+  }
 }

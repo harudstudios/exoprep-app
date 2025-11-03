@@ -26,6 +26,8 @@ mixin ProductivityMixin on State<ProjectFormView> {
   Future<void> _handleProductivityFormStateChange() async {
     final state = viewModel.projectFormState.value;
     log('Status: ${state.status} - Data: ${state.data}');
+
+    CommonLoadingIndicator.hide();
     if (viewModel.projectFormState.value.status == ViewModelStatus.error) {
       AppToasts.showError(
         context,
@@ -34,8 +36,11 @@ mixin ProductivityMixin on State<ProjectFormView> {
         description: '${viewModel.projectFormState.value.error}',
       );
     } else if (viewModel.projectFormState.value.status ==
+        ViewModelStatus.loading) {
+      CommonLoadingIndicator.show(context);
+    } else if (viewModel.projectFormState.value.status ==
         ViewModelStatus.success) {
-      AppToasts.showError(
+      AppToasts.showSuccess(
         context,
         title: 'Success',
         description: 'Successfuly added project',

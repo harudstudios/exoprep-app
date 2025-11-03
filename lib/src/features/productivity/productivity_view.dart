@@ -8,6 +8,7 @@ import 'package:root/src/core/navigation/routes.dart';
 import 'package:root/src/features/productivity/productivity_viewmodel.dart';
 import 'package:root/src/features/productivity/widgets/horizontal_date_picker.dart';
 import 'package:root/src/features/productivity/widgets/project_list_tile.dart';
+import 'package:root/src/models/project_model/project_model.dart';
 
 part 'productivity_mixin.dart';
 
@@ -22,7 +23,7 @@ class _ProductivityViewState extends State<ProductivityView>
     with ProductivityMixin {
   @override
   Widget build(BuildContext context) {
-    // final productivityViewModel = context.productivityViewModel;
+    final viewModel = context.productivityViewModel;
 
     return Scaffold(
       appBar: AppBar(
@@ -44,16 +45,14 @@ class _ProductivityViewState extends State<ProductivityView>
       ),
       body: SafeArea(
         child: CustomScrollView(
-          physics: const NeverScrollableScrollPhysics(),
+          // physics: const NeverScrollableScrollPhysics(),
           slivers: [
             const SliverToBoxAdapter(child: SizedBox(height: 12)),
 
             // Horizontal Date Picker
             SliverToBoxAdapter(
               child: HorizontalDatePicker(
-                onDateSelected: (value) {
-                  //!TODO: Implement the UI Change
-                },
+                onDateSelected: viewModel.updateSelectedDate,
               ),
             ),
 
@@ -61,7 +60,7 @@ class _ProductivityViewState extends State<ProductivityView>
 
             // "Your Projects" Title
             SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               sliver: SliverToBoxAdapter(
                 child: Text(
                   'Your Projects',
@@ -73,11 +72,84 @@ class _ProductivityViewState extends State<ProductivityView>
             ),
 
             const SliverToBoxAdapter(child: SizedBox(height: 12)),
+            // ⭐ Project List with StreamBuilder
+            ValueListenableBuilder<DateTime>(
+              valueListenable: viewModel.selectedDate,
+              builder: (context, selectedDate, child) {
+                return StreamBuilder<List<ProjectModel>>(
+                  stream: viewModel.watchProjectsForSelectedDate(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const SliverToBoxAdapter(
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                      );
+                    }
 
-            // Project List Tile
-            const SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              sliver: SliverToBoxAdapter(child: ProjectListTile()),
+                    if (snapshot.hasError) {
+                      return SliverToBoxAdapter(
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Text(
+                              'Error: ${snapshot.error}',
+                              style: const TextStyle(color: Colors.red),
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
+                    final projects = snapshot.data ?? [];
+
+                    if (projects.isEmpty) {
+                      return SliverToBoxAdapter(
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(40),
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.folder_off_outlined,
+                                  size: 64,
+                                  color: Colors.grey.shade400,
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'No projects found',
+                                  style: context.titleMedium?.copyWith(
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
+                    return SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final project = projects[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: ProjectListTile(projectModel: project),
+                            );
+                          },
+                          childCount: projects.length,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
             ),
           ],
         ),
