@@ -17,6 +17,47 @@ class ProjectLocalService {
     _isInitialized = true;
   }
 
+  Stream<List<ProjectSchemaModel>> watchProjectsCreatedAfter({
+    DateTime? date,
+  }) {
+    // Get today at 12:01 AM if no date provided
+    final startDate =
+        date ??
+        DateTime(
+          DateTime.now().year,
+          DateTime.now().month,
+          DateTime.now().day,
+          0,
+          1,
+        );
+    return _isar.projectSchemaModels
+        .filter()
+        .createdAtGreaterThan(startDate)
+        .sortByCreatedAtDesc()
+        .watch(fireImmediately: true);
+  }
+
+  // ⭐ WATCH - Stream all projects for a specific date
+  Stream<List<ProjectSchemaModel>> watchProjectsForDate(DateTime date) {
+    final startOfDay = DateTime(date.year, date.month, date.day);
+    final endOfDay = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      23,
+      59,
+      59,
+      999,
+      999,
+    );
+
+    return _isar.projectSchemaModels
+        .filter()
+        .createdAtBetween(startOfDay, endOfDay)
+        .sortByCreatedAtDesc()
+        .watch(fireImmediately: true);
+  }
+
   // CREATE - Add new project
   Future<int> createProject(ProjectSchemaModel project) async {
     return await _isar.writeTxn(() async {

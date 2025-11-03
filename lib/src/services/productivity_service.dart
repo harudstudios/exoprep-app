@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:root/data/local/services/project_local_service.dart';
 import 'package:root/data/models/project_model/project_schema_model.dart';
+import 'package:root/src/models/project_model/project_model.dart';
 
 class ProductivityService {
   static final ProjectLocalService _projectLocalService = ProjectLocalService();
@@ -17,5 +18,45 @@ class ProductivityService {
       log('❌ Error saving project: $e');
       rethrow;
     }
+  }
+
+  // ⭐ Stream projects as ProjectModel
+  Stream<List<ProjectModel>> watchProjectsStream({DateTime? date}) async* {
+    await _projectLocalService.initialize();
+
+    await for (final schemaList
+        in _projectLocalService.watchProjectsCreatedAfter(date: date)) {
+      // Convert List<ProjectSchemaModel> to List<ProjectModel>
+      final projectModels = schemaList.map(_convertToProjectModel).toList();
+      yield projectModels;
+    }
+  }
+
+  // ⭐ Stream projects for specific date
+  Stream<List<ProjectModel>> watchProjectsForDate(DateTime date) async* {
+    await _projectLocalService.initialize();
+
+    await for (final schemaList in _projectLocalService.watchProjectsForDate(
+      date,
+    )) {
+      final projectModels = schemaList.map(_convertToProjectModel).toList();
+      yield projectModels;
+    }
+  }
+
+  // ⭐ Convert ProjectSchemaModel to ProjectModel
+  ProjectModel _convertToProjectModel(ProjectSchemaModel schema) {
+    return ProjectModel(
+      id: schema.id,
+      projectName: schema.projectName,
+      hasTimeGoal: schema.hasTimeGoal,
+      timeGoalDurationMinutes: schema.timeGoalDurationMinutes,
+      timeGoalFrequency: schema.timeGoalFrequency,
+      timeGoalRepeatingFrequency: schema.timeGoalRepeatingFrequency,
+      timeGoalOneTimeStartDate: schema.timeGoalOneTimeStartDate,
+      timeGoalOneTimeHasDeadlineDate: schema.timeGoalOneTimeHasDeadlineDate,
+      timeGoalOneTimeDeadlineDate: schema.timeGoalOneTimeDeadlineDate,
+      tagColor: schema.tagColor,
+    );
   }
 }

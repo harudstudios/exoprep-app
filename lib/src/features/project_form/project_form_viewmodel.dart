@@ -137,6 +137,9 @@ class ProjectViewModel {
   // ⭐ Function to save project
   Future<void> saveProject(String projectName) async {
     try {
+      projectFormState.value = ViewModelState.loading();
+      await Future.delayed(const Duration(seconds: 2));
+
       final model = buildProjectModel(projectName);
 
       log('✅ Project saved: ${model.projectName}');
@@ -145,6 +148,7 @@ class ProjectViewModel {
       await _projectProductivityRepository.saveProjectFromViewModel(
         model,
       );
+      projectFormState.value = ViewModelState.success();
       reset();
       router.pop();
     } catch (e) {
