@@ -138,7 +138,7 @@ class ProjectViewModel {
   Future<void> saveProject(String projectName) async {
     try {
       projectFormState.value = ViewModelState.loading();
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 1));
 
       final model = buildProjectModel(projectName);
 
