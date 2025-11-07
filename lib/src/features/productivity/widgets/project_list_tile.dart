@@ -77,9 +77,9 @@ class ProjectTileMiddleSection extends StatelessWidget {
               children: [
                 Text(
                   projectName.capitalizeEachWord(),
-                  style: context.titleMedium?.copyWith(
+                  style: context.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
-                    // color: const Color(0xFFB8935E),
+                    fontSize: 19,
                     color: Color(colorTag),
                   ),
                   maxLines: 1,
