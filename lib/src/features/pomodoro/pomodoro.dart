@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
 
+import 'package:root/src/models/project_model/project_model.dart';
+
 class PomodoroTimerScreen extends StatefulWidget {
-  const PomodoroTimerScreen({super.key});
+  const PomodoroTimerScreen({required this.projectModel, super.key});
+
+  final ProjectModel projectModel;
 
   @override
   State<PomodoroTimerScreen> createState() => _PomodoroTimerScreenState();
@@ -28,6 +32,7 @@ class _PomodoroTimerScreenState extends State<PomodoroTimerScreen> {
   @override
   void initState() {
     super.initState();
+    _projectColor = Color(widget.projectModel.tagColor);
     _requestPermissions();
   }
 

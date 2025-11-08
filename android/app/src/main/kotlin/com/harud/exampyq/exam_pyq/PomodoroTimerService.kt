@@ -95,17 +95,22 @@ class PomodoroTimerService : Service() {
 
         // Create the custom layout view
         val notificationLayout = RemoteViews(packageName, R.layout.notification_timer_custom)
+
+        // Directly set the text and color for the title and timer
         notificationLayout.setTextViewText(R.id.notification_project_name, projectName)
+        notificationLayout.setTextColor(R.id.notification_project_name, notificationColor)
+
         notificationLayout.setTextViewText(R.id.notification_timer, timeText)
+        notificationLayout.setTextColor(R.id.notification_timer, notificationColor)
+
+        // Update the progress bar
         notificationLayout.setProgressBar(R.id.notification_progress, 100, progress, false)
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_timer) // Use the icon you created
-            .setStyle(NotificationCompat.DecoratedCustomViewStyle()) // IMPORTANT for custom views
+            .setSmallIcon(R.drawable.ic_timer)
+            .setStyle(NotificationCompat.DecoratedCustomViewStyle())
             .setCustomContentView(notificationLayout)
-            .setCustomBigContentView(notificationLayout) // For expanded view
-            .setColor(notificationColor) // This will tint the notification accents
-            .setColorized(true)
+            .setCustomBigContentView(notificationLayout)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setContentIntent(pendingIntent)
