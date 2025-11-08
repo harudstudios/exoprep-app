@@ -1,7 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:async';
-
 import 'package:root/src/models/project_model/project_model.dart';
 
 class PomodoroTimerScreen extends StatefulWidget {
@@ -15,10 +14,14 @@ class PomodoroTimerScreen extends StatefulWidget {
 
 class _PomodoroTimerScreenState extends State<PomodoroTimerScreen> {
   static const platform = MethodChannel('com.harud.exampyq.exam_pyq/timer');
+  static const eventChannel = EventChannel(
+    'com.harud.exampyq.exam_pyq/timer_events',
+  );
 
   int _remainingSeconds = 25 * 60;
   bool _isRunning = false;
   Timer? _timer;
+  StreamSubscription? _eventSubscription;
 
   String _projectName = "Focus Session";
   Color _projectColor = Colors.red;
@@ -26,6 +29,7 @@ class _PomodoroTimerScreenState extends State<PomodoroTimerScreen> {
   @override
   void dispose() {
     _timer?.cancel();
+    _eventSubscription?.cancel();
     super.dispose();
   }
 
@@ -33,7 +37,37 @@ class _PomodoroTimerScreenState extends State<PomodoroTimerScreen> {
   void initState() {
     super.initState();
     _projectColor = Color(widget.projectModel.tagColor);
+    _projectName = widget.projectModel.projectName ?? '';
     _requestPermissions();
+    _listenToTimerEvents();
+  }
+
+  void _listenToTimerEvents() {
+    _eventSubscription = eventChannel.receiveBroadcastStream().listen(
+      (event) {
+        print("📱 Flutter received event: $event");
+
+        if (event is Map) {
+          final isPaused = event['isPaused'] as bool;
+          print("📱 Extracted isPaused: $isPaused");
+
+          setState(() {
+            _isRunning = !isPaused;
+          });
+
+          if (isPaused) {
+            print("⏸️ Pausing local timer");
+            _timer?.cancel();
+          } else {
+            print("▶️ Starting local timer");
+            _startLocalTimer();
+          }
+        }
+      },
+      onError: (error) {
+        print("❌ Error in event channel: $error");
+      },
+    );
   }
 
   Future<void> _requestPermissions() async {
@@ -42,6 +76,17 @@ class _PomodoroTimerScreenState extends State<PomodoroTimerScreen> {
     } on PlatformException catch (e) {
       print("Failed to request permissions: ${e.message}");
     }
+  }
+
+  void _startLocalTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_remainingSeconds > 0) {
+        setState(() => _remainingSeconds--);
+      } else {
+        _stopTimer();
+      }
+    });
   }
 
   Future<void> _startTimer() async {
@@ -57,13 +102,7 @@ class _PomodoroTimerScreenState extends State<PomodoroTimerScreen> {
       print("Failed to start timer: ${e.message}");
     }
 
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_remainingSeconds > 0) {
-        setState(() => _remainingSeconds--);
-      } else {
-        _stopTimer();
-      }
-    });
+    _startLocalTimer();
   }
 
   Future<void> _pauseTimer() async {

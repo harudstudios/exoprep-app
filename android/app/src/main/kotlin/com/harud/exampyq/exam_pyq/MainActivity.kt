@@ -7,21 +7,30 @@ import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugin.common.EventChannel
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.IntentFilter
 
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "com.harud.exampyq.exam_pyq/timer"
+    private val EVENT_CHANNEL = "com.harud.exampyq.exam_pyq/timer_events"
     private val NOTIFICATION_PERMISSION_CODE = 100
     private val TAG = "PomodoroDebug"
+    
+    private var eventSink: EventChannel.EventSink? = null
+    private var isReceiverRegistered = false
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         
         Log.d(TAG, "=== CONFIGURING FLUTTER ENGINE ===")
         
+        // Method Channel
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { 
             call, result ->
             
@@ -54,7 +63,7 @@ class MainActivity: FlutterActivity() {
                     }
                 }
                 "pauseTimer" -> {
-                    Log.d(TAG, "Pause timer called")
+                    Log.d(TAG, "Pause timer called from Flutter")
                     try {
                         pauseTimerService()
                         result.success(true)
@@ -79,6 +88,64 @@ class MainActivity: FlutterActivity() {
                 }
             }
         }
+        
+        // Event Channel
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, EVENT_CHANNEL).setStreamHandler(
+            object : EventChannel.StreamHandler {
+                override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+                    eventSink = events
+                    Log.d(TAG, "Event channel listener attached")
+                    registerTimerReceiver()
+                }
+
+                override fun onCancel(arguments: Any?) {
+                    eventSink = null
+                    Log.d(TAG, "Event channel listener cancelled")
+                    unregisterTimerReceiver()
+                }
+            }
+        )
+    }
+    
+    private fun registerTimerReceiver() {
+        if (!isReceiverRegistered) {
+            val filter = IntentFilter("com.harud.exampyq.TIMER_STATE_CHANGED")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(timerStateReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+            } else {
+                registerReceiver(timerStateReceiver, filter)
+            }
+            isReceiverRegistered = true
+            Log.d(TAG, "Timer receiver registered")
+        }
+    }
+    
+    private fun unregisterTimerReceiver() {
+        if (isReceiverRegistered) {
+            try {
+                unregisterReceiver(timerStateReceiver)
+                isReceiverRegistered = false
+                Log.d(TAG, "Timer receiver unregistered")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error unregistering receiver", e)
+            }
+        }
+    }
+    
+    private val timerStateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val isPaused = intent?.getBooleanExtra("isPaused", false) ?: false
+            Log.d(TAG, "🔔 Received timer state change broadcast: isPaused=$isPaused")
+            
+            // Send to Flutter
+            eventSink?.success(mapOf("isPaused" to isPaused))
+            Log.d(TAG, "✅ Sent state to Flutter: isPaused=$isPaused")
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterTimerReceiver()
     }
 
     private fun requestNotificationPermission() {
@@ -127,21 +194,13 @@ class MainActivity: FlutterActivity() {
             putExtra("projectColor", projectColor)
         }
         
-        Log.d(TAG, "Intent created with extras:")
-        Log.d(TAG, "  Action: ${intent.action}")
-        Log.d(TAG, "  totalSeconds: ${intent.getIntExtra("totalSeconds", -1)}")
-        Log.d(TAG, "  projectName: ${intent.getStringExtra("projectName")}")
-        Log.d(TAG, "  projectColor: ${intent.getStringExtra("projectColor")}")
-        
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Log.d(TAG, "Starting foreground service (Android O+)")
-                val result = startForegroundService(intent)
-                Log.d(TAG, "startForegroundService result: $result")
+                startForegroundService(intent)
             } else {
                 Log.d(TAG, "Starting regular service (Android < O)")
-                val result = startService(intent)
-                Log.d(TAG, "startService result: $result")
+                startService(intent)
             }
         } catch (e: Exception) {
             Log.e(TAG, "Exception starting service", e)
@@ -154,7 +213,7 @@ class MainActivity: FlutterActivity() {
             action = PomodoroTimerService.ACTION_PAUSE
         }
         startService(intent)
-        Log.d(TAG, "Pause intent sent")
+        Log.d(TAG, "Pause intent sent from Flutter")
     }
 
     private fun stopTimerService() {
