@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Background Track (the empty part of the bar) -->
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp" />
+            <solid android:color="#33FFFFFF" /> <!-- Semi-transparent white -->
+        </shape>
+    </item>
+
+    <!-- Progress Track (the filled part of the bar) -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape android:shape="rectangle">
+                <corners android:radius="8dp" />
+                <!-- This color will be a placeholder. We can't change it dynamically. -->
+                <solid android:color="#FFFFFFFF" />
+            </shape>
+        </clip>
+    </item>
+
+</layer-list>

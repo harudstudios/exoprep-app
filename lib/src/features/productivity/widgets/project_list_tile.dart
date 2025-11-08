@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:root/src/core/extensions/context_extension.dart';
 import 'package:root/src/core/extensions/string_extensions.dart';
+import 'package:root/src/features/pomodoro/pomodoro.dart';
 import 'package:root/src/models/project_model/project_model.dart';
 
 class ProjectListTile extends StatelessWidget {
@@ -22,13 +23,23 @@ class ProjectListTile extends StatelessWidget {
 
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 28,
-            backgroundColor: Color(projectModel.tagColor),
-            child: const Icon(
-              Icons.play_arrow,
-              color: Colors.white,
-              size: 36,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PomodoroTimerScreen(),
+                ),
+              );
+            },
+            child: CircleAvatar(
+              radius: 28,
+              backgroundColor: Color(projectModel.tagColor),
+              child: const Icon(
+                Icons.play_arrow,
+                color: Colors.white,
+                size: 36,
+              ),
             ),
           ),
 
