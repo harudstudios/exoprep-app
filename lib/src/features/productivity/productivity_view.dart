@@ -9,6 +9,7 @@ import 'package:root/src/features/productivity/productivity_viewmodel.dart';
 import 'package:root/src/features/productivity/widgets/horizontal_date_picker.dart';
 import 'package:root/src/features/productivity/widgets/project_list_tile.dart';
 import 'package:root/src/models/project_model/project_model.dart';
+import 'package:root/src/services/pomodoro_service.dart';
 
 part 'productivity_mixin.dart';
 

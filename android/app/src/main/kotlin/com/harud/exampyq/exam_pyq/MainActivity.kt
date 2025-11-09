@@ -47,14 +47,16 @@ class MainActivity: FlutterActivity() {
                     val totalSeconds = call.argument<Int>("totalSeconds") ?: 1500
                     val projectName = call.argument<String>("projectName") ?: "Focus"
                     val projectColor = call.argument<String>("projectColor") ?: "FFFF5252"
+                    val sessionId = call.argument<String>("sessionId") ?: ""
                     
                     Log.d(TAG, "Arguments received:")
                     Log.d(TAG, "  totalSeconds: $totalSeconds")
                     Log.d(TAG, "  projectName: $projectName")
                     Log.d(TAG, "  projectColor: $projectColor")
+                    Log.d(TAG, "  sessionId: $sessionId")
                     
                     try {
-                        startTimerService(totalSeconds, projectName, projectColor)
+                        startTimerService(totalSeconds, projectName, projectColor, sessionId)
                         Log.d(TAG, "startTimerService completed successfully")
                         result.success(true)
                     } catch (e: Exception) {
@@ -80,6 +82,46 @@ class MainActivity: FlutterActivity() {
                     } catch (e: Exception) {
                         Log.e(TAG, "Error stopping timer", e)
                         result.error("STOP_ERROR", e.message, null)
+                    }
+                }
+               "getPendingSession" -> {
+                    try {
+                        val prefs = getSharedPreferences("PomodoroPrefs", Context.MODE_PRIVATE)
+                        val isActive = prefs.getBoolean("session_active", false)
+                        val sessionId = prefs.getString("last_session_id", "") ?: ""
+                        val timeSpent = prefs.getInt("last_session_time_spent", 0)
+                        val projectName = prefs.getString("project_name", "") ?: ""
+                        val projectColor = prefs.getString("project_color", "") ?: ""
+                        
+                        // ALWAYS return the data, regardless of active status
+                        val sessionData = mapOf(
+                            "isActive" to isActive,
+                            "sessionId" to sessionId,
+                            "timeSpent" to timeSpent,
+                            "projectName" to projectName,
+                            "projectColor" to projectColor
+                        )
+                        
+                        Log.d(TAG, "📦 Returning session data: isActive=$isActive, id=$sessionId, time=$timeSpent, name=$projectName")
+                        result.success(sessionData)
+                    } catch (e: Exception) {
+                        Log.e(TAG, "❌ Error getting session: ${e.message}")
+                        result.error("GET_SESSION_ERROR", e.message, null)
+                    }
+                }
+                "clearPendingSession" -> {
+                    try {
+                        val prefs = getSharedPreferences("PomodoroPrefs", Context.MODE_PRIVATE)
+                        prefs.edit()
+                            .putBoolean("session_active", false)
+                            .putString("last_session_id", "")
+                            .putInt("last_session_time_spent", 0)
+                            .putString("project_name", "")
+                            .putString("project_color", "")
+                            .apply()
+                        result.success(true)
+                    } catch (e: Exception) {
+                        result.error("CLEAR_SESSION_ERROR", e.message, null)
                     }
                 }
                 else -> {
@@ -109,7 +151,11 @@ class MainActivity: FlutterActivity() {
     
     private fun registerTimerReceiver() {
         if (!isReceiverRegistered) {
-            val filter = IntentFilter("com.harud.exampyq.TIMER_STATE_CHANGED")
+            val filter = IntentFilter().apply {
+                addAction("com.harud.exampyq.TIMER_STATE_CHANGED")
+                addAction("com.harud.exampyq.TIMER_STOPPED")
+                addAction("com.harud.exampyq.TIMER_COMPLETED")
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 registerReceiver(timerStateReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
             } else {
@@ -134,12 +180,61 @@ class MainActivity: FlutterActivity() {
     
     private val timerStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            val isPaused = intent?.getBooleanExtra("isPaused", false) ?: false
-            Log.d(TAG, "🔔 Received timer state change broadcast: isPaused=$isPaused")
-            
-            // Send to Flutter
-            eventSink?.success(mapOf("isPaused" to isPaused))
-            Log.d(TAG, "✅ Sent state to Flutter: isPaused=$isPaused")
+            when (intent?.action) {
+                "com.harud.exampyq.TIMER_STATE_CHANGED" -> {
+                    val isPaused = intent.getBooleanExtra("isPaused", false)
+                    Log.d(TAG, "🔔 Received timer state change broadcast: isPaused=$isPaused")
+                    eventSink?.success(mapOf("isPaused" to isPaused))
+                }
+                "com.harud.exampyq.TIMER_STOPPED" -> {
+                    val timeSpent = intent.getIntExtra("timeSpent", 0)
+                    val sessionId = intent.getStringExtra("sessionId")
+                    Log.d(TAG, "🔔 Received timer stopped broadcast")
+                    eventSink?.success(mapOf(
+                        "stopped" to true,
+                        "timeSpent" to timeSpent,
+                        "sessionId" to sessionId
+                    ))
+                }
+                "com.harud.exampyq.TIMER_COMPLETED" -> {
+                    val timeSpent = intent.getIntExtra("timeSpent", 0)
+                    val sessionId = intent.getStringExtra("sessionId")
+                    Log.d(TAG, "🔔 Received timer completed broadcast")
+                    eventSink?.success(mapOf(
+                        "completed" to true,
+                        "timeSpent" to timeSpent,
+                        "sessionId" to sessionId
+                    ))
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Tell service that app is in foreground
+        val intent = Intent(this, PomodoroTimerService::class.java).apply {
+            action = "APP_IN_FOREGROUND"
+        }
+        try {
+            startService(intent)
+            Log.d(TAG, "App resumed - notified service")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error notifying service on resume", e)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Tell service that app is in background
+        val intent = Intent(this, PomodoroTimerService::class.java).apply {
+            action = "APP_IN_BACKGROUND"
+        }
+        try {
+            startService(intent)
+            Log.d(TAG, "App paused - notified service")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error notifying service on pause", e)
         }
     }
 
@@ -184,7 +279,7 @@ class MainActivity: FlutterActivity() {
         }
     }
 
-    private fun startTimerService(totalSeconds: Int, projectName: String, projectColor: String) {
+    private fun startTimerService(totalSeconds: Int, projectName: String, projectColor: String, sessionId: String) {
         Log.d(TAG, "Creating service intent")
         
         val intent = Intent(this, PomodoroTimerService::class.java).apply {
@@ -192,6 +287,7 @@ class MainActivity: FlutterActivity() {
             putExtra("totalSeconds", totalSeconds)
             putExtra("projectName", projectName)
             putExtra("projectColor", projectColor)
+            putExtra("sessionId", sessionId)
         }
         
         try {

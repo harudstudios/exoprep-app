@@ -12,6 +12,7 @@ mixin ProductivityMixin on State<ProductivityView> {
       _productivityViewModel.productivityState.addListener(
         _handleProductivityStateChange,
       );
+      PomodoroService.checkAndShowPendingSessionDialog(context);
     });
     super.initState();
   }
