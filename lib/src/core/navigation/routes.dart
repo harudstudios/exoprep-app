@@ -20,7 +20,8 @@ enum AppRoute {
   examDashboard('examDashboard'),
 
   /* Productivity */
-  createProjectForm('/createProjectForm');
+  createProjectForm('/createProjectForm'),
+  pomodoro('/pomodoro');
 
   const AppRoute(this.path);
 

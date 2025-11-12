@@ -13,3 +13,5 @@ enum SelectExamErrorType { examFetchError, examUpdateError }
 enum TimeGoalFrequency { onetime, recurring }
 
 enum TimeGoalRepeatingFrequency { daily, weekly, monthly }
+
+enum TimerStatus { paused, stopped, playing }

@@ -8,6 +8,7 @@ import 'package:root/src/features/authentication/authentication_view.dart';
 import 'package:root/src/features/flashcards/flashcards_view.dart';
 import 'package:root/src/features/home/home_view.dart';
 import 'package:root/src/features/leaderboard/leaderboard_view.dart';
+import 'package:root/src/features/pomodoro/pomodoro_view.dart';
 import 'package:root/src/features/productivity/productivity_view.dart';
 import 'package:root/src/features/profile/profile_view.dart';
 import 'package:root/src/features/project_form/project_form_view.dart';
@@ -64,6 +65,18 @@ final router = GoRouter(
       pageBuilder: (context, state) {
         return AppRouteTransition.slideFromBottom(
           child: const ProjectFormView(),
+          key: state.pageKey,
+        );
+      },
+    ),
+
+    GoRoute(
+      name: AppRoute.pomodoro.name,
+      path: AppRoute.pomodoro.path,
+      parentNavigatorKey: _rootNavigatorKey,
+      pageBuilder: (context, state) {
+        return AppRouteTransition.slideFromBottom(
+          child: const PomodoroView(),
           key: state.pageKey,
         );
       },

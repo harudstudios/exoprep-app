@@ -7,6 +7,7 @@ extension AppScopeExtension on BuildContext {
   AuthenticationViewModel get authViewModel => AppScope.of(this).authViewModel;
   ProductivityViewModel get productivityViewModel =>
       AppScope.of(this).productivityViewModel;
+
   // ProfileViewModel get profileViewModel => AppScope.of(this).profileViewModel;
   // Add more accessors here when you add more viewmodels to the scope
 }
