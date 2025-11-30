@@ -14,22 +14,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppDI(
       child: AdaptiveTheme(
-          light: AppTheme.lightTheme,
-          dark: AppTheme.darkTheme,
-          initial: savedThemeMode ?? AdaptiveThemeMode.system,
-          builder: (theme, darkTheme) => ToastificationWrapper(
-            child: Builder(
-              builder: (context) {
-                return MaterialApp.router(
-                  // title: '$DISPLAY_NAME',
-                  debugShowCheckedModeBanner: false,
-                  routerConfig: router,
-                  darkTheme: darkTheme,
-                  theme: theme,
-                );
-              },
-            ),
+        light: AppTheme.lightTheme,
+        dark: AppTheme.darkTheme,
+        initial: savedThemeMode ?? AdaptiveThemeMode.system,
+        builder: (theme, darkTheme) => ToastificationWrapper(
+          child: Builder(
+            builder: (context) {
+              return MaterialApp.router(
+                // title: '$DISPLAY_NAME',
+                debugShowCheckedModeBanner: false,
+                routerConfig: router,
+                darkTheme: darkTheme,
+                theme: theme,
+              );
+            },
           ),
+        ),
         // ),
       ),
     );

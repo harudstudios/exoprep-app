@@ -11,17 +11,13 @@ class FlashcardViewModel {
   FlashcardViewModel(this._repository);
 
   // ValueNotifiers for reactive state
-  final ValueNotifier<List<FlashcardSchemaModel>> flashcardsNotifier =
-  ValueNotifier([]);
-  final ValueNotifier<List<FlashcardSetSchemaModel>> flashcardSetsNotifier =
-  ValueNotifier([]);
+  final ValueNotifier<List<FlashcardSchemaModel>> flashcardsNotifier = ValueNotifier([]);
+  final ValueNotifier<List<FlashcardSetSchemaModel>> flashcardSetsNotifier = ValueNotifier([]);
   final ValueNotifier<bool> isLoadingNotifier = ValueNotifier(false);
   final ValueNotifier<bool> isGeneratingNotifier = ValueNotifier(false);
   final ValueNotifier<String?> errorMessageNotifier = ValueNotifier(null);
-  final ValueNotifier<FlashcardType> selectedTypeNotifier =
-  ValueNotifier(FlashcardType.shortNotes);
-  final ValueNotifier<FlashcardSource> selectedSourceNotifier =
-  ValueNotifier(FlashcardSource.text);
+  final ValueNotifier<FlashcardType> selectedTypeNotifier = ValueNotifier(FlashcardType.shortNotes);
+  final ValueNotifier<FlashcardSource> selectedSourceNotifier = ValueNotifier(FlashcardSource.text);
 
   // Getters for convenience
   List<FlashcardSchemaModel> get flashcards => flashcardsNotifier.value;
@@ -150,10 +146,10 @@ class FlashcardViewModel {
 
   // Helper: Create short note flashcard
   FlashcardSchemaModel _createShortNoteFlashcard(
-      String content,
-      FlashcardSource source,
-      String? fileName,
-      ) {
+    String content,
+    FlashcardSource source,
+    String? fileName,
+  ) {
     return FlashcardSchemaModel()
       ..title = fileName ?? 'Short Note'
       ..subtitle = 'Quick reference note'
@@ -166,10 +162,10 @@ class FlashcardViewModel {
 
   // Helper: Create quiz flashcards
   List<FlashcardSchemaModel> _createQuizFlashcards(
-      String content,
-      FlashcardSource source,
-      String? fileName,
-      ) {
+    String content,
+    FlashcardSource source,
+    String? fileName,
+  ) {
     // TODO: Use Gemini to generate relevant quiz questions
     return [
       FlashcardSchemaModel()
@@ -187,10 +183,10 @@ class FlashcardViewModel {
 
   // Helper: Create summary flashcard
   FlashcardSchemaModel _createSummaryFlashcard(
-      String content,
-      FlashcardSource source,
-      String? fileName,
-      ) {
+    String content,
+    FlashcardSource source,
+    String? fileName,
+  ) {
     return FlashcardSchemaModel()
       ..title = fileName ?? 'Summary'
       ..subtitle = 'Content summary'

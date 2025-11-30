@@ -497,8 +497,12 @@ class _HomeViewState extends State<HomeView> {
                         ),
                       ],
                       child: IntrinsicWidth(
-                        child: Padding(
+                        child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: context.isDarkMode ? Colors.black : Colors.white,
+                          ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
