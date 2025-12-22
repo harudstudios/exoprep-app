@@ -16,7 +16,7 @@ class FlashCardsCollectionDataModel {
   @JsonKey(name: "tag")
   final String? tag;
   @JsonKey(name: "color")
-  final String? color;
+  final int? color;
   @JsonKey(name: "card_count")
   final int? cardCount;
   @JsonKey(name: "deck_ids")

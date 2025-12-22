@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:root/src/core/app/landing.dart';
 import 'package:root/src/core/app/splash.dart';
-import 'package:root/src/core/navigation/route_transition.dart';
+import 'package:root/src/core/app/landing.dart';
 import 'package:root/src/core/navigation/routes.dart';
-import 'package:root/src/features/authentication/authentication_view.dart';
-import 'package:root/src/features/flashcards/flashcards_view.dart';
 import 'package:root/src/features/home/home_view.dart';
-import 'package:root/src/features/leaderboard/leaderboard_view.dart';
 import 'package:root/src/features/profile/profile_view.dart';
+import 'package:root/src/core/navigation/route_transition.dart';
+import 'package:root/src/features/leaderboard/leaderboard_view.dart';
 import 'package:root/src/features/project_form/project_form_view.dart';
 import 'package:root/src/features/select_exams/select_exams_view.dart';
+import 'package:root/src/features/authentication/authentication_view.dart';
+import 'package:root/src/features/flash_cards/views/flash_cards_collection_screen.dart';
 
 /// Global router configuration for the application
 /// This handles all navigation routing and transitions
@@ -26,10 +26,7 @@ final router = GoRouter(
       name: AppRoute.splash.name,
       path: AppRoute.splash.path,
       pageBuilder: (context, state) {
-        return AppRouteTransition.slideFromBottom(
-          child: const Splash(),
-          key: state.pageKey,
-        );
+        return AppRouteTransition.slideFromBottom(child: const Splash(), key: state.pageKey);
       },
     ),
 
@@ -38,10 +35,7 @@ final router = GoRouter(
       name: AppRoute.authentication.name,
       path: AppRoute.authentication.path,
       pageBuilder: (context, state) {
-        return AppRouteTransition.slideFromRight(
-          child: const AuthenticationView(),
-          key: state.pageKey,
-        );
+        return AppRouteTransition.slideFromRight(child: const AuthenticationView(), key: state.pageKey);
       },
     ),
 
@@ -49,10 +43,7 @@ final router = GoRouter(
       name: AppRoute.selectExams.name,
       path: AppRoute.selectExams.path,
       pageBuilder: (context, state) {
-        return AppRouteTransition.defaultPageTransition(
-          child: const SelectExamsView(),
-          key: state.pageKey,
-        );
+        return AppRouteTransition.defaultPageTransition(child: const SelectExamsView(), key: state.pageKey);
       },
     ),
 
@@ -61,10 +52,7 @@ final router = GoRouter(
       path: AppRoute.createProjectForm.path,
       parentNavigatorKey: _rootNavigatorKey,
       pageBuilder: (context, state) {
-        return AppRouteTransition.slideFromBottom(
-          child: const ProjectFormView(),
-          key: state.pageKey,
-        );
+        return AppRouteTransition.slideFromBottom(child: const ProjectFormView(), key: state.pageKey);
       },
     ),
 
@@ -83,10 +71,8 @@ final router = GoRouter(
               routes: [
                 GoRoute(
                   path: AppRoute.examDashboard.path,
-                  pageBuilder: (context, state) => AppRouteTransition.slideFromRight(
-                    child: const DetailsScreen(),
-                    key: state.pageKey,
-                  ),
+                  pageBuilder: (context, state) =>
+                      AppRouteTransition.slideFromRight(child: const DetailsScreen(), key: state.pageKey),
                 ),
               ],
             ),
@@ -110,7 +96,7 @@ final router = GoRouter(
           routes: [
             GoRoute(
               path: AppRoute.flashcards.path,
-              pageBuilder: (context, state) => const NoTransitionPage(child: FlashcardsView()),
+              pageBuilder: (context, state) => const NoTransitionPage(child: FlashCardsCollectionScreen()),
             ),
           ],
         ),
@@ -179,8 +165,6 @@ class DetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Detail Screen')),
-    );
+    return Scaffold(appBar: AppBar(title: const Text('Detail Screen')));
   }
 }

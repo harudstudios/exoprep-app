@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
 import 'package:isar_community/isar.dart';
 
 part 'flash_cards_collection_isar_model.g.dart';
@@ -16,7 +15,7 @@ class FlashCardsCollectionIsarModel {
   String? tag;
 
   // Stored as a Hex String (e.g., "#FF448AFF") in the DB
-  String? colorHex;
+  int? colorHex;
 
   int? cardCount;
 
@@ -33,34 +32,12 @@ class FlashCardsCollectionIsarModel {
   // Since we added a factory constructor below, the default one was removed.
   FlashCardsCollectionIsarModel();
 
-  // --- HELPER: Convert DB String to Flutter Color ---
-  @ignore // Tell Isar to ignore this getter, it's just for the UI
-  Color get uiColor {
-    if (colorHex == null || colorHex!.isEmpty) return Colors.blue;
-    try {
-      // Handle simple hex (#RRGGBB) or alpha hex (#AARRGGBB)
-      var hex = colorHex!.replaceFirst('#', '');
-      if (hex.length == 6) {
-        hex = 'FF$hex'; // Add full opacity if missing
-      }
-      return Color(int.parse(hex, radix: 16));
-    } catch (e) {
-      return Colors.blue; // Fallback
-    }
-  }
-
-  // Helper to set color from UI
-  set uiColor(Color newColor) {
-    // Stores as #AARRGGBB
-    colorHex = '#${newColor.value.toRadixString(16).padLeft(8, '0').toUpperCase()}';
-  }
-
   // CopyWith method
   FlashCardsCollectionIsarModel copyWith({
     Id? id,
     String? title,
     String? tag,
-    String? colorHex,
+    int? colorHex,
     int? cardCount,
     List<String>? deckIds,
     DateTime? createdAt,
@@ -84,7 +61,7 @@ class FlashCardsCollectionIsarModel {
     return FlashCardsCollectionIsarModel()
       ..title = json['title'] as String?
       ..tag = json['tag'] as String?
-      ..colorHex = json['color'] as String?
+      ..colorHex = json['color'] as int?
       ..cardCount = json['card_count'] as int?
       ..deckIds = (json['deck_ids'] as List<dynamic>?)?.map((e) => e as String).toList()
       ..createdAt = json['created_at'] != null ? DateTime.parse(json['created_at'] as String) : null

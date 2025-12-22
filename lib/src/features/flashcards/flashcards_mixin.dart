@@ -17,7 +17,7 @@ mixin FlashcardsMixin<T extends StatefulWidget> on State<T> {
         onCreate: (title, tag, color) {
           log("Creating set: $title, $tag, $color");
 
-          final dataModel = FlashCardsCollectionDataModel(title: title, tag: tag, color: color.toHex());
+          final dataModel = FlashCardsCollectionDataModel(title: title, tag: tag, color: color.value);
 
           _viewModel.createFlashCardsCollection(dataModel);
         },

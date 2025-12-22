@@ -11,7 +11,7 @@ FlashCardsCollectionDataModel _$FlashCardsCollectionDataModelFromJson(
 ) => FlashCardsCollectionDataModel(
   title: json['title'] as String?,
   tag: json['tag'] as String?,
-  color: json['color'] as String?,
+  color: (json['color'] as num?)?.toInt(),
   cardCount: (json['card_count'] as num?)?.toInt(),
   deckIds: (json['deck_ids'] as List<dynamic>?)
       ?.map((e) => e as String)

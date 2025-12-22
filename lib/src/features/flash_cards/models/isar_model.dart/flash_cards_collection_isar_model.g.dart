@@ -23,11 +23,7 @@ const FlashCardsCollectionIsarModelSchema = CollectionSchema(
       name: r'cardCount',
       type: IsarType.long,
     ),
-    r'colorHex': PropertySchema(
-      id: 1,
-      name: r'colorHex',
-      type: IsarType.string,
-    ),
+    r'colorHex': PropertySchema(id: 1, name: r'colorHex', type: IsarType.long),
     r'createdAt': PropertySchema(
       id: 2,
       name: r'createdAt',
@@ -120,12 +116,6 @@ int _flashCardsCollectionIsarModelEstimateSize(
 ) {
   var bytesCount = offsets.last;
   {
-    final value = object.colorHex;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
-  {
     final list = object.deckIds;
     if (list != null) {
       bytesCount += 3 + list.length * 3;
@@ -159,7 +149,7 @@ void _flashCardsCollectionIsarModelSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeLong(offsets[0], object.cardCount);
-  writer.writeString(offsets[1], object.colorHex);
+  writer.writeLong(offsets[1], object.colorHex);
   writer.writeDateTime(offsets[2], object.createdAt);
   writer.writeStringList(offsets[3], object.deckIds);
   writer.writeDateTime(offsets[4], object.deletedAt);
@@ -178,7 +168,7 @@ FlashCardsCollectionIsarModel _flashCardsCollectionIsarModelDeserialize(
 ) {
   final object = FlashCardsCollectionIsarModel();
   object.cardCount = reader.readLongOrNull(offsets[0]);
-  object.colorHex = reader.readStringOrNull(offsets[1]);
+  object.colorHex = reader.readLongOrNull(offsets[1]);
   object.createdAt = reader.readDateTimeOrNull(offsets[2]);
   object.deckIds = reader.readStringList(offsets[3]);
   object.deletedAt = reader.readDateTimeOrNull(offsets[4]);
@@ -199,7 +189,7 @@ P _flashCardsCollectionIsarModelDeserializeProp<P>(
     case 0:
       return (reader.readLongOrNull(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 2:
       return (reader.readDateTimeOrNull(offset)) as P;
     case 3:
@@ -964,14 +954,10 @@ extension FlashCardsCollectionIsarModelQueryFilter
     FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
-  colorHexEqualTo(String? value, {bool caseSensitive = true}) {
+  colorHexEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.equalTo(
-          property: r'colorHex',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
+        FilterCondition.equalTo(property: r'colorHex', value: value),
       );
     });
   }
@@ -981,18 +967,13 @@ extension FlashCardsCollectionIsarModelQueryFilter
     FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
-  colorHexGreaterThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
+  colorHexGreaterThan(int? value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.greaterThan(
           include: include,
           property: r'colorHex',
           value: value,
-          caseSensitive: caseSensitive,
         ),
       );
     });
@@ -1003,18 +984,13 @@ extension FlashCardsCollectionIsarModelQueryFilter
     FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
-  colorHexLessThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
+  colorHexLessThan(int? value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.lessThan(
           include: include,
           property: r'colorHex',
           value: value,
-          caseSensitive: caseSensitive,
         ),
       );
     });
@@ -1026,11 +1002,10 @@ extension FlashCardsCollectionIsarModelQueryFilter
     QAfterFilterCondition
   >
   colorHexBetween(
-    String? lower,
-    String? upper, {
+    int? lower,
+    int? upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -1040,102 +1015,7 @@ extension FlashCardsCollectionIsarModelQueryFilter
           includeLower: includeLower,
           upper: upper,
           includeUpper: includeUpper,
-          caseSensitive: caseSensitive,
         ),
-      );
-    });
-  }
-
-  QueryBuilder<
-    FlashCardsCollectionIsarModel,
-    FlashCardsCollectionIsarModel,
-    QAfterFilterCondition
-  >
-  colorHexStartsWith(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.startsWith(
-          property: r'colorHex',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<
-    FlashCardsCollectionIsarModel,
-    FlashCardsCollectionIsarModel,
-    QAfterFilterCondition
-  >
-  colorHexEndsWith(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.endsWith(
-          property: r'colorHex',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<
-    FlashCardsCollectionIsarModel,
-    FlashCardsCollectionIsarModel,
-    QAfterFilterCondition
-  >
-  colorHexContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.contains(
-          property: r'colorHex',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<
-    FlashCardsCollectionIsarModel,
-    FlashCardsCollectionIsarModel,
-    QAfterFilterCondition
-  >
-  colorHexMatches(String pattern, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.matches(
-          property: r'colorHex',
-          wildcard: pattern,
-          caseSensitive: caseSensitive,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<
-    FlashCardsCollectionIsarModel,
-    FlashCardsCollectionIsarModel,
-    QAfterFilterCondition
-  >
-  colorHexIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'colorHex', value: ''),
-      );
-    });
-  }
-
-  QueryBuilder<
-    FlashCardsCollectionIsarModel,
-    FlashCardsCollectionIsarModel,
-    QAfterFilterCondition
-  >
-  colorHexIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(property: r'colorHex', value: ''),
       );
     });
   }
@@ -2700,9 +2580,9 @@ extension FlashCardsCollectionIsarModelQueryWhereDistinct
     FlashCardsCollectionIsarModel,
     QDistinct
   >
-  distinctByColorHex({bool caseSensitive = true}) {
+  distinctByColorHex() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'colorHex', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'colorHex');
     });
   }
 
@@ -2816,7 +2696,7 @@ extension FlashCardsCollectionIsarModelQueryProperty
     });
   }
 
-  QueryBuilder<FlashCardsCollectionIsarModel, String?, QQueryOperations>
+  QueryBuilder<FlashCardsCollectionIsarModel, int?, QQueryOperations>
   colorHexProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'colorHex');

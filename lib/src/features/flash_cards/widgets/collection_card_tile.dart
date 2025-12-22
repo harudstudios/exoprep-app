@@ -24,17 +24,17 @@ class CollectionCardTile extends StatelessWidget {
     // Color Logic
     final bgTopColor = isDark ? accentColor.withValues(alpha: 0.30) : accentColor.withValues(alpha: 0.12);
 
-    final bgBottomColor = isDark ? accentColor.withValues(alpha: 0.20) : accentColor.withValues(alpha: 0.18);
+    final bgBottomColor = isDark ? accentColor.withValues(alpha: 0.20) : accentColor.withValues(alpha: 0.48);
 
     final borderColor = isDark ? accentColor.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.4);
 
     final titleColor = isDark ? Colors.white.withValues(alpha: 0.95) : Colors.black.withValues(alpha: 0.8);
 
-    final decoIconColor = isDark ? accentColor.withValues(alpha: 0.15) : accentColor.withValues(alpha: 0.25);
+    final decoIconColor = isDark ? accentColor.withValues(alpha: 0.15) : accentColor.withValues(alpha: 0.65);
 
     final pillBgColor = isDark ? Colors.black.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.7);
 
-    final pillTextColor = isDark ? accentColor : accentColor.withValues(alpha: 1);
+    final pillTextColor = isDark ? accentColor : accentColor;
 
     return Material(
       color: Colors.transparent,
