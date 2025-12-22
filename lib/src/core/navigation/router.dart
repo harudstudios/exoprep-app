@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:root/src/core/app/splash.dart';
 import 'package:root/src/core/app/landing.dart';
 import 'package:root/src/core/navigation/routes.dart';
+import 'package:root/src/features/flash_cards/subfeatures/decks_view/view/decks_list_screen.dart';
 import 'package:root/src/features/home/home_view.dart';
 import 'package:root/src/features/profile/profile_view.dart';
 import 'package:root/src/core/navigation/route_transition.dart';
@@ -97,6 +98,20 @@ final router = GoRouter(
             GoRoute(
               path: AppRoute.flashcards.path,
               pageBuilder: (context, state) => const NoTransitionPage(child: FlashCardsCollectionScreen()),
+            ),
+            GoRoute(
+              path: AppRoute.decksListView.path,
+              name: AppRoute.decksListView.name,
+              pageBuilder: (context, state) {
+                final data = state.extra as Map<String, dynamic>;
+
+                final id = data['id'] as String;
+                final name = data['name'] as String;
+
+                return NoTransitionPage(
+                  child: DecksListScreen(collectionId: id, collectionName: name),
+                );
+              },
             ),
           ],
         ),

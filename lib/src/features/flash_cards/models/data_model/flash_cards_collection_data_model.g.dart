@@ -9,6 +9,7 @@ part of 'flash_cards_collection_data_model.dart';
 FlashCardsCollectionDataModel _$FlashCardsCollectionDataModelFromJson(
   Map<String, dynamic> json,
 ) => FlashCardsCollectionDataModel(
+  id: json['id'] as String?,
   title: json['title'] as String?,
   tag: json['tag'] as String?,
   color: (json['color'] as num?)?.toInt(),
@@ -24,6 +25,7 @@ FlashCardsCollectionDataModel _$FlashCardsCollectionDataModelFromJson(
 Map<String, dynamic> _$FlashCardsCollectionDataModelToJson(
   FlashCardsCollectionDataModel instance,
 ) => <String, dynamic>{
+  'id': instance.id,
   'title': instance.title,
   'tag': instance.tag,
   'color': instance.color,

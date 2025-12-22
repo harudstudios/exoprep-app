@@ -18,6 +18,7 @@ enum AppRoute {
 
   /* Nested Navigation */
   examDashboard('examDashboard'),
+  decksListView('/decksListView'),
 
   /* Productivity */
   createProjectForm('/createProjectForm');
@@ -30,12 +31,10 @@ enum AppRoute {
 /// Extension to provide convenient navigation methods
 extension AppRouteNavigation on AppRoute {
   /// Navigate to this route, replacing current route
-  void go(BuildContext context, {Object? extra}) =>
-      context.go(path, extra: extra);
+  void go(BuildContext context, {Object? extra}) => context.go(path, extra: extra);
 
   /// Push this route onto the navigation stack
-  void push(BuildContext context, {Object? extra}) =>
-      context.push(path, extra: extra);
+  void push(BuildContext context, {Object? extra}) => context.push(path, extra: extra);
 
   /// Push nested route from parent
   void pushNested(BuildContext context, AppRoute parent, {Object? extra}) {

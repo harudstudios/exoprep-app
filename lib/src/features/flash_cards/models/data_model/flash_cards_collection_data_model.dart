@@ -11,6 +11,8 @@ String flashCardsClassDataModelToJson(FlashCardsCollectionDataModel data) => jso
 
 @JsonSerializable()
 class FlashCardsCollectionDataModel {
+  @JsonKey(name: "id")
+  final String? id;
   @JsonKey(name: "title")
   final String? title;
   @JsonKey(name: "tag")
@@ -29,6 +31,7 @@ class FlashCardsCollectionDataModel {
   final String? deletedAt;
 
   FlashCardsCollectionDataModel({
+    this.id,
     this.title,
     this.tag,
     this.color,
