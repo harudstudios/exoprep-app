@@ -9,11 +9,11 @@ class FlashcardCard extends StatelessWidget {
   final VoidCallback onDelete;
 
   const FlashcardCard({
-    super.key,
     required this.flashcard,
     required this.onTap,
     required this.onBookmark,
     required this.onDelete,
+    super.key,
   });
 
   @override
@@ -71,9 +71,7 @@ class FlashcardCard extends StatelessWidget {
                 ),
                 IconButton(
                   icon: Icon(
-                    flashcard.isBookmarked
-                        ? Icons.bookmark
-                        : Icons.bookmark_border,
+                    flashcard.isBookmarked ? Icons.bookmark : Icons.bookmark_border,
                     color: flashcard.isBookmarked ? Colors.amber : null,
                   ),
                   onPressed: onBookmark,

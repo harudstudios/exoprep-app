@@ -3,10 +3,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:isar_community/isar.dart';
 
-part 'flash_cards_class_isar_model.g.dart';
+part 'flash_cards_collection_isar_model.g.dart';
 
 @collection
-class FlashCardsClassIsarModel {
+class FlashCardsCollectionIsarModel {
   Id id = Isar.autoIncrement;
 
   @Index(type: IndexType.value)
@@ -31,7 +31,7 @@ class FlashCardsClassIsarModel {
 
   // FIX: Isar requires an empty unnamed constructor.
   // Since we added a factory constructor below, the default one was removed.
-  FlashCardsClassIsarModel();
+  FlashCardsCollectionIsarModel();
 
   // --- HELPER: Convert DB String to Flutter Color ---
   @ignore // Tell Isar to ignore this getter, it's just for the UI
@@ -56,7 +56,7 @@ class FlashCardsClassIsarModel {
   }
 
   // CopyWith method
-  FlashCardsClassIsarModel copyWith({
+  FlashCardsCollectionIsarModel copyWith({
     Id? id,
     String? title,
     String? tag,
@@ -67,7 +67,7 @@ class FlashCardsClassIsarModel {
     DateTime? updatedAt,
     DateTime? deletedAt,
   }) {
-    return FlashCardsClassIsarModel()
+    return FlashCardsCollectionIsarModel()
       ..id = id ?? this.id
       ..title = title ?? this.title
       ..tag = tag ?? this.tag
@@ -80,8 +80,8 @@ class FlashCardsClassIsarModel {
   }
 
   // Convert from JSON
-  factory FlashCardsClassIsarModel.fromJson(Map<String, dynamic> json) {
-    return FlashCardsClassIsarModel()
+  factory FlashCardsCollectionIsarModel.fromJson(Map<String, dynamic> json) {
+    return FlashCardsCollectionIsarModel()
       ..title = json['title'] as String?
       ..tag = json['tag'] as String?
       ..colorHex = json['color'] as String?
@@ -109,7 +109,7 @@ class FlashCardsClassIsarModel {
   // Debug log
   void printDetails() {
     log('═══════════════════════════════════════');
-    log('FlashCardsClassIsarModel Instance:');
+    log('FlashCardsCollectionIsarModel Instance:');
     log('───────────────────────────────────────');
     log('ID: $id');
     log('Title: ${title ?? "null"}');
@@ -126,7 +126,7 @@ class FlashCardsClassIsarModel {
   // ToString override
   @override
   String toString() {
-    return 'FlashCardsClassIsarModel(id: $id, title: $title, tag: $tag, colorHex: $colorHex, cardCount: $cardCount, deckIds: $deckIds)';
+    return 'FlashCardsCollectionIsarModel(id: $id, title: $title, tag: $tag, colorHex: $colorHex, cardCount: $cardCount, deckIds: $deckIds)';
   }
 
   // Check if soft deleted

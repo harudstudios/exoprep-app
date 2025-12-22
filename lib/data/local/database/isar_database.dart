@@ -3,7 +3,7 @@
 
 import 'package:isar_community/isar.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:root/src/features/flashcards/models/isar_model.dart/flash_cards_class_isar_model.dart';
+import 'package:root/src/features/flash_cards/models/isar_model.dart/flash_cards_collection_isar_model.dart';
 
 /// Singleton service to manage Isar database instance
 class IsarService {
@@ -35,7 +35,7 @@ class IsarService {
 
     _isar = await Isar.open(
       [
-        FlashCardsClassIsarModelSchema,
+        FlashCardsCollectionIsarModelSchema,
         // Add more schemas here as you create them (e.g., TasksSchema)
       ],
       directory: dir.path,
@@ -58,7 +58,7 @@ class IsarService {
 
   List<IsarCollection<dynamic>> get allCollections => [
     // Add your collections here:
-    _isar!.flashCardsClassIsarModels,
+    _isar!.flashCardsCollectionIsarModels,
 
     // _isar!.yourNewTableModels, <-- Just add new ones here
   ];

@@ -5,12 +5,12 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'dart:convert';
 
-part 'flash_cards_class_data_model.g.dart';
+part 'flash_cards_collection_data_model.g.dart';
 
-String flashCardsClassDataModelToJson(FlashCardsClassDataModel data) => json.encode(data.toJson());
+String flashCardsClassDataModelToJson(FlashCardsCollectionDataModel data) => json.encode(data.toJson());
 
 @JsonSerializable()
-class FlashCardsClassDataModel {
+class FlashCardsCollectionDataModel {
   @JsonKey(name: "title")
   final String? title;
   @JsonKey(name: "tag")
@@ -28,7 +28,7 @@ class FlashCardsClassDataModel {
   @JsonKey(name: "deleted_at")
   final String? deletedAt;
 
-  FlashCardsClassDataModel({
+  FlashCardsCollectionDataModel({
     this.title,
     this.tag,
     this.color,
@@ -39,7 +39,7 @@ class FlashCardsClassDataModel {
     this.deletedAt,
   });
 
-  factory FlashCardsClassDataModel.fromJson(Map<String, dynamic> json) => _$FlashCardsClassDataModelFromJson(json);
+  factory FlashCardsCollectionDataModel.fromJson(Map<String, dynamic> json) => _$FlashCardsCollectionDataModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$FlashCardsClassDataModelToJson(this);
+  Map<String, dynamic> toJson() => _$FlashCardsCollectionDataModelToJson(this);
 }

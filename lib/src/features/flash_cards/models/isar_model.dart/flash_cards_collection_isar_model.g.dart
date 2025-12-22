@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'flash_cards_class_isar_model.dart';
+part of 'flash_cards_collection_isar_model.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
@@ -9,14 +9,14 @@ part of 'flash_cards_class_isar_model.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetFlashCardsClassIsarModelCollection on Isar {
-  IsarCollection<FlashCardsClassIsarModel> get flashCardsClassIsarModels =>
-      this.collection();
+extension GetFlashCardsCollectionIsarModelCollection on Isar {
+  IsarCollection<FlashCardsCollectionIsarModel>
+  get flashCardsCollectionIsarModels => this.collection();
 }
 
-const FlashCardsClassIsarModelSchema = CollectionSchema(
-  name: r'FlashCardsClassIsarModel',
-  id: -5014676257885542560,
+const FlashCardsCollectionIsarModelSchema = CollectionSchema(
+  name: r'FlashCardsCollectionIsarModel',
+  id: 7189028616900870334,
   properties: {
     r'cardCount': PropertySchema(
       id: 0,
@@ -58,10 +58,10 @@ const FlashCardsClassIsarModelSchema = CollectionSchema(
     ),
   },
 
-  estimateSize: _flashCardsClassIsarModelEstimateSize,
-  serialize: _flashCardsClassIsarModelSerialize,
-  deserialize: _flashCardsClassIsarModelDeserialize,
-  deserializeProp: _flashCardsClassIsarModelDeserializeProp,
+  estimateSize: _flashCardsCollectionIsarModelEstimateSize,
+  serialize: _flashCardsCollectionIsarModelSerialize,
+  deserialize: _flashCardsCollectionIsarModelDeserialize,
+  deserializeProp: _flashCardsCollectionIsarModelDeserializeProp,
   idName: r'id',
   indexes: {
     r'title': IndexSchema(
@@ -107,14 +107,14 @@ const FlashCardsClassIsarModelSchema = CollectionSchema(
   links: {},
   embeddedSchemas: {},
 
-  getId: _flashCardsClassIsarModelGetId,
-  getLinks: _flashCardsClassIsarModelGetLinks,
-  attach: _flashCardsClassIsarModelAttach,
+  getId: _flashCardsCollectionIsarModelGetId,
+  getLinks: _flashCardsCollectionIsarModelGetLinks,
+  attach: _flashCardsCollectionIsarModelAttach,
   version: '3.3.0-dev.3',
 );
 
-int _flashCardsClassIsarModelEstimateSize(
-  FlashCardsClassIsarModel object,
+int _flashCardsCollectionIsarModelEstimateSize(
+  FlashCardsCollectionIsarModel object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -152,8 +152,8 @@ int _flashCardsClassIsarModelEstimateSize(
   return bytesCount;
 }
 
-void _flashCardsClassIsarModelSerialize(
-  FlashCardsClassIsarModel object,
+void _flashCardsCollectionIsarModelSerialize(
+  FlashCardsCollectionIsarModel object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -170,13 +170,13 @@ void _flashCardsClassIsarModelSerialize(
   writer.writeDateTime(offsets[9], object.updatedAt);
 }
 
-FlashCardsClassIsarModel _flashCardsClassIsarModelDeserialize(
+FlashCardsCollectionIsarModel _flashCardsCollectionIsarModelDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = FlashCardsClassIsarModel();
+  final object = FlashCardsCollectionIsarModel();
   object.cardCount = reader.readLongOrNull(offsets[0]);
   object.colorHex = reader.readStringOrNull(offsets[1]);
   object.createdAt = reader.readDateTimeOrNull(offsets[2]);
@@ -189,7 +189,7 @@ FlashCardsClassIsarModel _flashCardsClassIsarModelDeserialize(
   return object;
 }
 
-P _flashCardsClassIsarModelDeserializeProp<P>(
+P _flashCardsCollectionIsarModelDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -221,39 +221,47 @@ P _flashCardsClassIsarModelDeserializeProp<P>(
   }
 }
 
-Id _flashCardsClassIsarModelGetId(FlashCardsClassIsarModel object) {
+Id _flashCardsCollectionIsarModelGetId(FlashCardsCollectionIsarModel object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _flashCardsClassIsarModelGetLinks(
-  FlashCardsClassIsarModel object,
+List<IsarLinkBase<dynamic>> _flashCardsCollectionIsarModelGetLinks(
+  FlashCardsCollectionIsarModel object,
 ) {
   return [];
 }
 
-void _flashCardsClassIsarModelAttach(
+void _flashCardsCollectionIsarModelAttach(
   IsarCollection<dynamic> col,
   Id id,
-  FlashCardsClassIsarModel object,
+  FlashCardsCollectionIsarModel object,
 ) {
   object.id = id;
 }
 
-extension FlashCardsClassIsarModelQueryWhereSort
+extension FlashCardsCollectionIsarModelQueryWhereSort
     on
         QueryBuilder<
-          FlashCardsClassIsarModel,
-          FlashCardsClassIsarModel,
+          FlashCardsCollectionIsarModel,
+          FlashCardsCollectionIsarModel,
           QWhere
         > {
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterWhere>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterWhere
+  >
   anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterWhere>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterWhere
+  >
   anyTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -262,7 +270,11 @@ extension FlashCardsClassIsarModelQueryWhereSort
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterWhere>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterWhere
+  >
   anyCreatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -272,16 +284,16 @@ extension FlashCardsClassIsarModelQueryWhereSort
   }
 }
 
-extension FlashCardsClassIsarModelQueryWhere
+extension FlashCardsCollectionIsarModelQueryWhere
     on
         QueryBuilder<
-          FlashCardsClassIsarModel,
-          FlashCardsClassIsarModel,
+          FlashCardsCollectionIsarModel,
+          FlashCardsCollectionIsarModel,
           QWhereClause
         > {
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   idEqualTo(Id id) {
@@ -291,8 +303,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   idNotEqualTo(Id id) {
@@ -318,8 +330,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   idGreaterThan(Id id, {bool include = false}) {
@@ -331,8 +343,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   idLessThan(Id id, {bool include = false}) {
@@ -344,8 +356,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   idBetween(
@@ -367,8 +379,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   titleIsNull() {
@@ -380,8 +392,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   titleIsNotNull() {
@@ -398,8 +410,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   titleEqualTo(String? title) {
@@ -411,8 +423,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   titleNotEqualTo(String? title) {
@@ -458,8 +470,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   titleGreaterThan(String? title, {bool include = false}) {
@@ -476,8 +488,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   titleLessThan(String? title, {bool include = false}) {
@@ -494,8 +506,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   titleBetween(
@@ -518,8 +530,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   titleStartsWith(String TitlePrefix) {
@@ -535,8 +547,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   titleIsEmpty() {
@@ -548,8 +560,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   titleIsNotEmpty() {
@@ -575,8 +587,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   tagIsNull() {
@@ -588,8 +600,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   tagIsNotNull() {
@@ -606,8 +618,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   tagEqualTo(String? tag) {
@@ -619,8 +631,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   tagNotEqualTo(String? tag) {
@@ -666,8 +678,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   createdAtIsNull() {
@@ -679,8 +691,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   createdAtIsNotNull() {
@@ -697,8 +709,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   createdAtEqualTo(DateTime? createdAt) {
@@ -710,8 +722,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   createdAtNotEqualTo(DateTime? createdAt) {
@@ -757,8 +769,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   createdAtGreaterThan(DateTime? createdAt, {bool include = false}) {
@@ -775,8 +787,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   createdAtLessThan(DateTime? createdAt, {bool include = false}) {
@@ -793,8 +805,8 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterWhereClause
   >
   createdAtBetween(
@@ -817,16 +829,16 @@ extension FlashCardsClassIsarModelQueryWhere
   }
 }
 
-extension FlashCardsClassIsarModelQueryFilter
+extension FlashCardsCollectionIsarModelQueryFilter
     on
         QueryBuilder<
-          FlashCardsClassIsarModel,
-          FlashCardsClassIsarModel,
+          FlashCardsCollectionIsarModel,
+          FlashCardsCollectionIsarModel,
           QFilterCondition
         > {
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   cardCountIsNull() {
@@ -838,8 +850,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   cardCountIsNotNull() {
@@ -851,8 +863,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   cardCountEqualTo(int? value) {
@@ -864,8 +876,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   cardCountGreaterThan(int? value, {bool include = false}) {
@@ -881,8 +893,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   cardCountLessThan(int? value, {bool include = false}) {
@@ -898,8 +910,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   cardCountBetween(
@@ -922,8 +934,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   colorHexIsNull() {
@@ -935,8 +947,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   colorHexIsNotNull() {
@@ -948,8 +960,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   colorHexEqualTo(String? value, {bool caseSensitive = true}) {
@@ -965,8 +977,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   colorHexGreaterThan(
@@ -987,8 +999,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   colorHexLessThan(
@@ -1009,8 +1021,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   colorHexBetween(
@@ -1035,8 +1047,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   colorHexStartsWith(String value, {bool caseSensitive = true}) {
@@ -1052,8 +1064,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   colorHexEndsWith(String value, {bool caseSensitive = true}) {
@@ -1069,8 +1081,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   colorHexContains(String value, {bool caseSensitive = true}) {
@@ -1086,8 +1098,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   colorHexMatches(String pattern, {bool caseSensitive = true}) {
@@ -1103,8 +1115,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   colorHexIsEmpty() {
@@ -1116,8 +1128,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   colorHexIsNotEmpty() {
@@ -1129,8 +1141,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   createdAtIsNull() {
@@ -1142,8 +1154,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   createdAtIsNotNull() {
@@ -1155,8 +1167,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   createdAtEqualTo(DateTime? value) {
@@ -1168,8 +1180,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   createdAtGreaterThan(DateTime? value, {bool include = false}) {
@@ -1185,8 +1197,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   createdAtLessThan(DateTime? value, {bool include = false}) {
@@ -1202,8 +1214,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   createdAtBetween(
@@ -1226,8 +1238,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deckIdsIsNull() {
@@ -1239,8 +1251,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deckIdsIsNotNull() {
@@ -1252,8 +1264,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deckIdsElementEqualTo(String value, {bool caseSensitive = true}) {
@@ -1269,8 +1281,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deckIdsElementGreaterThan(
@@ -1291,8 +1303,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deckIdsElementLessThan(
@@ -1313,8 +1325,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deckIdsElementBetween(
@@ -1339,8 +1351,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deckIdsElementStartsWith(String value, {bool caseSensitive = true}) {
@@ -1356,8 +1368,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deckIdsElementEndsWith(String value, {bool caseSensitive = true}) {
@@ -1373,8 +1385,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deckIdsElementContains(String value, {bool caseSensitive = true}) {
@@ -1390,8 +1402,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deckIdsElementMatches(String pattern, {bool caseSensitive = true}) {
@@ -1407,8 +1419,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deckIdsElementIsEmpty() {
@@ -1420,8 +1432,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deckIdsElementIsNotEmpty() {
@@ -1433,8 +1445,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deckIdsLengthEqualTo(int length) {
@@ -1444,8 +1456,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deckIdsIsEmpty() {
@@ -1455,8 +1467,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deckIdsIsNotEmpty() {
@@ -1466,8 +1478,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deckIdsLengthLessThan(int length, {bool include = false}) {
@@ -1477,8 +1489,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deckIdsLengthGreaterThan(int length, {bool include = false}) {
@@ -1488,8 +1500,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deckIdsLengthBetween(
@@ -1510,8 +1522,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deletedAtIsNull() {
@@ -1523,8 +1535,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deletedAtIsNotNull() {
@@ -1536,8 +1548,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deletedAtEqualTo(DateTime? value) {
@@ -1549,8 +1561,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deletedAtGreaterThan(DateTime? value, {bool include = false}) {
@@ -1566,8 +1578,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deletedAtLessThan(DateTime? value, {bool include = false}) {
@@ -1583,8 +1595,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   deletedAtBetween(
@@ -1607,8 +1619,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   idEqualTo(Id value) {
@@ -1620,8 +1632,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   idGreaterThan(Id value, {bool include = false}) {
@@ -1637,8 +1649,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   idLessThan(Id value, {bool include = false}) {
@@ -1654,8 +1666,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   idBetween(
@@ -1678,8 +1690,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   isDeletedEqualTo(bool value) {
@@ -1691,8 +1703,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   isNewEqualTo(bool value) {
@@ -1704,8 +1716,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   tagIsNull() {
@@ -1717,8 +1729,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   tagIsNotNull() {
@@ -1730,8 +1742,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   tagEqualTo(String? value, {bool caseSensitive = true}) {
@@ -1747,8 +1759,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   tagGreaterThan(
@@ -1769,8 +1781,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   tagLessThan(
@@ -1791,8 +1803,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   tagBetween(
@@ -1817,8 +1829,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   tagStartsWith(String value, {bool caseSensitive = true}) {
@@ -1834,8 +1846,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   tagEndsWith(String value, {bool caseSensitive = true}) {
@@ -1851,8 +1863,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   tagContains(String value, {bool caseSensitive = true}) {
@@ -1868,8 +1880,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   tagMatches(String pattern, {bool caseSensitive = true}) {
@@ -1885,8 +1897,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   tagIsEmpty() {
@@ -1898,8 +1910,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   tagIsNotEmpty() {
@@ -1911,8 +1923,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   titleIsNull() {
@@ -1924,8 +1936,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   titleIsNotNull() {
@@ -1937,8 +1949,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   titleEqualTo(String? value, {bool caseSensitive = true}) {
@@ -1954,8 +1966,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   titleGreaterThan(
@@ -1976,8 +1988,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   titleLessThan(
@@ -1998,8 +2010,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   titleBetween(
@@ -2024,8 +2036,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   titleStartsWith(String value, {bool caseSensitive = true}) {
@@ -2041,8 +2053,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   titleEndsWith(String value, {bool caseSensitive = true}) {
@@ -2058,8 +2070,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   titleContains(String value, {bool caseSensitive = true}) {
@@ -2075,8 +2087,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   titleMatches(String pattern, {bool caseSensitive = true}) {
@@ -2092,8 +2104,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   titleIsEmpty() {
@@ -2105,8 +2117,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   titleIsNotEmpty() {
@@ -2118,8 +2130,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   updatedAtIsNull() {
@@ -2131,8 +2143,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   updatedAtIsNotNull() {
@@ -2144,8 +2156,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   updatedAtEqualTo(DateTime? value) {
@@ -2157,8 +2169,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   updatedAtGreaterThan(DateTime? value, {bool include = false}) {
@@ -2174,8 +2186,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   updatedAtLessThan(DateTime? value, {bool include = false}) {
@@ -2191,8 +2203,8 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 
   QueryBuilder<
-    FlashCardsClassIsarModel,
-    FlashCardsClassIsarModel,
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
     QAfterFilterCondition
   >
   updatedAtBetween(
@@ -2215,149 +2227,221 @@ extension FlashCardsClassIsarModelQueryFilter
   }
 }
 
-extension FlashCardsClassIsarModelQueryObject
+extension FlashCardsCollectionIsarModelQueryObject
     on
         QueryBuilder<
-          FlashCardsClassIsarModel,
-          FlashCardsClassIsarModel,
+          FlashCardsCollectionIsarModel,
+          FlashCardsCollectionIsarModel,
           QFilterCondition
         > {}
 
-extension FlashCardsClassIsarModelQueryLinks
+extension FlashCardsCollectionIsarModelQueryLinks
     on
         QueryBuilder<
-          FlashCardsClassIsarModel,
-          FlashCardsClassIsarModel,
+          FlashCardsCollectionIsarModel,
+          FlashCardsCollectionIsarModel,
           QFilterCondition
         > {}
 
-extension FlashCardsClassIsarModelQuerySortBy
+extension FlashCardsCollectionIsarModelQuerySortBy
     on
         QueryBuilder<
-          FlashCardsClassIsarModel,
-          FlashCardsClassIsarModel,
+          FlashCardsCollectionIsarModel,
+          FlashCardsCollectionIsarModel,
           QSortBy
         > {
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   sortByCardCount() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'cardCount', Sort.asc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   sortByCardCountDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'cardCount', Sort.desc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   sortByColorHex() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'colorHex', Sort.asc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   sortByColorHexDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'colorHex', Sort.desc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   sortByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.asc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   sortByCreatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.desc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   sortByDeletedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'deletedAt', Sort.asc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   sortByDeletedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'deletedAt', Sort.desc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   sortByIsDeleted() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isDeleted', Sort.asc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   sortByIsDeletedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isDeleted', Sort.desc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   sortByIsNew() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isNew', Sort.asc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   sortByIsNewDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isNew', Sort.desc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   sortByTag() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'tag', Sort.asc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   sortByTagDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'tag', Sort.desc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   sortByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   sortByTitleDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.desc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   sortByUpdatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'updatedAt', Sort.asc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   sortByUpdatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'updatedAt', Sort.desc);
@@ -2365,147 +2449,227 @@ extension FlashCardsClassIsarModelQuerySortBy
   }
 }
 
-extension FlashCardsClassIsarModelQuerySortThenBy
+extension FlashCardsCollectionIsarModelQuerySortThenBy
     on
         QueryBuilder<
-          FlashCardsClassIsarModel,
-          FlashCardsClassIsarModel,
+          FlashCardsCollectionIsarModel,
+          FlashCardsCollectionIsarModel,
           QSortThenBy
         > {
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   thenByCardCount() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'cardCount', Sort.asc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   thenByCardCountDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'cardCount', Sort.desc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   thenByColorHex() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'colorHex', Sort.asc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   thenByColorHexDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'colorHex', Sort.desc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   thenByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.asc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   thenByCreatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.desc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   thenByDeletedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'deletedAt', Sort.asc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   thenByDeletedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'deletedAt', Sort.desc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   thenByIsDeleted() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isDeleted', Sort.asc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   thenByIsDeletedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isDeleted', Sort.desc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   thenByIsNew() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isNew', Sort.asc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   thenByIsNewDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isNew', Sort.desc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   thenByTag() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'tag', Sort.asc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   thenByTagDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'tag', Sort.desc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   thenByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   thenByTitleDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.desc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   thenByUpdatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'updatedAt', Sort.asc);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QAfterSortBy>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QAfterSortBy
+  >
   thenByUpdatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'updatedAt', Sort.desc);
@@ -2513,77 +2677,117 @@ extension FlashCardsClassIsarModelQuerySortThenBy
   }
 }
 
-extension FlashCardsClassIsarModelQueryWhereDistinct
+extension FlashCardsCollectionIsarModelQueryWhereDistinct
     on
         QueryBuilder<
-          FlashCardsClassIsarModel,
-          FlashCardsClassIsarModel,
+          FlashCardsCollectionIsarModel,
+          FlashCardsCollectionIsarModel,
           QDistinct
         > {
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QDistinct>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QDistinct
+  >
   distinctByCardCount() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'cardCount');
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QDistinct>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QDistinct
+  >
   distinctByColorHex({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'colorHex', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QDistinct>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QDistinct
+  >
   distinctByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'createdAt');
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QDistinct>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QDistinct
+  >
   distinctByDeckIds() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'deckIds');
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QDistinct>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QDistinct
+  >
   distinctByDeletedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'deletedAt');
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QDistinct>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QDistinct
+  >
   distinctByIsDeleted() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isDeleted');
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QDistinct>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QDistinct
+  >
   distinctByIsNew() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isNew');
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QDistinct>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QDistinct
+  >
   distinctByTag({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'tag', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QDistinct>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QDistinct
+  >
   distinctByTitle({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'title', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, FlashCardsClassIsarModel, QDistinct>
+  QueryBuilder<
+    FlashCardsCollectionIsarModel,
+    FlashCardsCollectionIsarModel,
+    QDistinct
+  >
   distinctByUpdatedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'updatedAt');
@@ -2591,83 +2795,84 @@ extension FlashCardsClassIsarModelQueryWhereDistinct
   }
 }
 
-extension FlashCardsClassIsarModelQueryProperty
+extension FlashCardsCollectionIsarModelQueryProperty
     on
         QueryBuilder<
-          FlashCardsClassIsarModel,
-          FlashCardsClassIsarModel,
+          FlashCardsCollectionIsarModel,
+          FlashCardsCollectionIsarModel,
           QQueryProperty
         > {
-  QueryBuilder<FlashCardsClassIsarModel, int, QQueryOperations> idProperty() {
+  QueryBuilder<FlashCardsCollectionIsarModel, int, QQueryOperations>
+  idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, int?, QQueryOperations>
+  QueryBuilder<FlashCardsCollectionIsarModel, int?, QQueryOperations>
   cardCountProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'cardCount');
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, String?, QQueryOperations>
+  QueryBuilder<FlashCardsCollectionIsarModel, String?, QQueryOperations>
   colorHexProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'colorHex');
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, DateTime?, QQueryOperations>
+  QueryBuilder<FlashCardsCollectionIsarModel, DateTime?, QQueryOperations>
   createdAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'createdAt');
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, List<String>?, QQueryOperations>
+  QueryBuilder<FlashCardsCollectionIsarModel, List<String>?, QQueryOperations>
   deckIdsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'deckIds');
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, DateTime?, QQueryOperations>
+  QueryBuilder<FlashCardsCollectionIsarModel, DateTime?, QQueryOperations>
   deletedAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'deletedAt');
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, bool, QQueryOperations>
+  QueryBuilder<FlashCardsCollectionIsarModel, bool, QQueryOperations>
   isDeletedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isDeleted');
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, bool, QQueryOperations>
+  QueryBuilder<FlashCardsCollectionIsarModel, bool, QQueryOperations>
   isNewProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isNew');
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, String?, QQueryOperations>
+  QueryBuilder<FlashCardsCollectionIsarModel, String?, QQueryOperations>
   tagProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'tag');
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, String?, QQueryOperations>
+  QueryBuilder<FlashCardsCollectionIsarModel, String?, QQueryOperations>
   titleProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'title');
     });
   }
 
-  QueryBuilder<FlashCardsClassIsarModel, DateTime?, QQueryOperations>
+  QueryBuilder<FlashCardsCollectionIsarModel, DateTime?, QQueryOperations>
   updatedAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'updatedAt');

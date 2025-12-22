@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'flash_cards_class_data_model.dart';
+part of 'flash_cards_collection_data_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-FlashCardsClassDataModel _$FlashCardsClassDataModelFromJson(
+FlashCardsCollectionDataModel _$FlashCardsCollectionDataModelFromJson(
   Map<String, dynamic> json,
-) => FlashCardsClassDataModel(
+) => FlashCardsCollectionDataModel(
   title: json['title'] as String?,
   tag: json['tag'] as String?,
   color: json['color'] as String?,
@@ -21,8 +21,8 @@ FlashCardsClassDataModel _$FlashCardsClassDataModelFromJson(
   deletedAt: json['deleted_at'] as String?,
 );
 
-Map<String, dynamic> _$FlashCardsClassDataModelToJson(
-  FlashCardsClassDataModel instance,
+Map<String, dynamic> _$FlashCardsCollectionDataModelToJson(
+  FlashCardsCollectionDataModel instance,
 ) => <String, dynamic>{
   'title': instance.title,
   'tag': instance.tag,

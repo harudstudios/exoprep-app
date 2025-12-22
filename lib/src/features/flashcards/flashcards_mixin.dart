@@ -13,15 +13,11 @@ mixin FlashcardsMixin<T extends StatefulWidget> on State<T> {
   void onFabPressed() {
     showDialog(
       context: context,
-      builder: (context) => CreateFlashcardSetDialog(
+      builder: (context) => CreateFlashCardsCollectionWidget(
         onCreate: (title, tag, color) {
           log("Creating set: $title, $tag, $color");
 
-          final dataModel = FlashCardsClassDataModel(
-            title: title,
-            tag: tag,
-            color: color.toHex(),
-          );
+          final dataModel = FlashCardsCollectionDataModel(title: title, tag: tag, color: color.toHex());
 
           _viewModel.createFlashCardsCollection(dataModel);
         },
