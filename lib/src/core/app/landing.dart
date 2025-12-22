@@ -41,11 +41,11 @@ class Landing extends StatelessWidget {
               selectedIcon: Icon(CupertinoIcons.house_fill, color: AppColors.primaryColor, size: 26),
               label: 'Home',
             ),
-            NavigationDestination(
-              icon: Icon(Icons.task_alt, color: Colors.grey, size: 26),
-              selectedIcon: Icon(Icons.task_alt, color: AppColors.primaryColor, size: 26),
-              label: 'Productivity',
-            ),
+            // NavigationDestination(
+            //   icon: Icon(Icons.task_alt, color: Colors.grey, size: 26),
+            //   selectedIcon: Icon(Icons.task_alt, color: AppColors.primaryColor, size: 26),
+            //   label: 'Productivity',
+            // ),
             NavigationDestination(
               icon: Icon(Icons.style_outlined, color: Colors.grey, size: 26),
               selectedIcon: Icon(Icons.style, color: AppColors.primaryColor, size: 26),

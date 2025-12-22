@@ -12,7 +12,7 @@ void main() async {
 
   await Future.delayed(const Duration(milliseconds: 50));
 
-  await IsarDatabase.getInstance();
+  await IsarService.instance.initialize();
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: Colors.transparent),

@@ -1,51 +1,65 @@
-// Update: lib/data/local/database/isar_database.dart
-
-import 'dart:developer';
+//
+// ignore_for_file: prefer_constructors_over_static_methods
 
 import 'package:isar_community/isar.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:root/data/models/project_model/project_schema_model.dart';
-import 'package:root/data/models/flashcard_model/flashcard_schema_model.dart';
+import 'package:root/src/features/flashcards/models/isar_model.dart/flash_cards_class_isar_model.dart';
 
-class IsarDatabase {
-  static Isar? _instance;
+/// Singleton service to manage Isar database instance
+class IsarService {
+  static IsarService? _instance;
+  static Isar? _isar;
 
-  // Singleton pattern for database instance
-  static Future<Isar> getInstance() async {
-    if (_instance != null && _instance!.isOpen) {
-      return _instance!;
-    }
+  IsarService._();
 
-    try {
-      final dir = await getApplicationDocumentsDirectory();
-
-      _instance = await Isar.open(
-        [
-          ProjectSchemaModelSchema,
-          FlashcardSchemaModelSchema,
-          FlashcardSetSchemaModelSchema,
-        ],
-        directory: dir.path,
-        name: 'app_database',
-      );
-
-      log('✅ Isar Database initialized successfully');
-      return _instance!;
-    } catch (e) {
-      log('❌ Isar Database initialization error: $e');
-      rethrow;
-    }
+  /// Get singleton instance
+  static IsarService get instance {
+    _instance ??= IsarService._();
+    return _instance!;
   }
 
-  // Close database (call when app closes)
-  static Future<void> close() async {
-    if (_instance?.isOpen ?? false) {
-      await _instance?.close();
-      _instance = null;
-      log('🔒 Isar Database closed');
+  /// Get Isar database instance
+  Isar get isar {
+    if (_isar == null) {
+      throw Exception('Isar not initialized. Call IsarService.instance.initialize() first.');
     }
+    return _isar!;
   }
 
-  // Check if database is open
-  static bool get isOpen => _instance?.isOpen ?? false;
+  bool get isInitialized => _isar != null;
+
+  Future<void> initialize() async {
+    if (_isar != null) return; // Already initialized
+
+    final dir = await getApplicationDocumentsDirectory();
+
+    _isar = await Isar.open(
+      [
+        FlashCardsClassIsarModelSchema,
+        // Add more schemas here as you create them (e.g., TasksSchema)
+      ],
+      directory: dir.path,
+      name: 'db',
+    );
+  }
+
+  /// Close the database (call this when app is terminated, if needed)
+  Future<void> close() async {
+    await _isar?.close();
+    _isar = null;
+  }
+
+  /// Clear all data (useful for testing or logout)
+  Future<void> clearAllData() async {
+    await _isar?.writeTxn(() async {
+      await _isar?.clear();
+    });
+  }
+
+  List<IsarCollection<dynamic>> get allCollections => [
+    // Add your collections here:
+    _isar!.flashCardsClassIsarModels,
+
+    // _isar!.yourNewTableModels, <-- Just add new ones here
+  ];
 }
