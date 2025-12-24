@@ -17,7 +17,7 @@ class CreateFlashCardCubit extends Cubit<CreateFlashCardState> {
   Future<void> saveFlashCards({required List<FlashCardDataModel> cards}) async {
     try {
       await _repository.saveFlashCards(deckId: deckId, cards: cards);
-      await _repository.updateDeckAndCollectionCounts(deckId);
+      await _repository.updateDeckAndCollectionCounts(deckId, cards.length);
     } catch (e) {
       log(e.toString());
     }

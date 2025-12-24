@@ -81,15 +81,16 @@ class FlashCardsRepository {
     });
   }
 
-  Future<void> updateDeckAndCollectionCounts(String deckId) async {
+  Future<void> updateDeckAndCollectionCounts(String deckId, int cardsCount) async {
     try {
-      // 1. Get deck by id
+      // 1. Parse deck id
       final parsedDeckId = int.tryParse(deckId);
       if (parsedDeckId == null) {
         log('updateDeckAndCollectionCounts: Invalid deckId: $deckId');
         return;
       }
 
+      // 2. Get deck
       final deck = await _isar.decksIsarModels.where().idEqualTo(parsedDeckId).findFirst();
 
       if (deck == null) {
@@ -97,19 +98,15 @@ class FlashCardsRepository {
         return;
       }
 
-      // 2. Count flashcards for this deck
-      final cardsCount = await _isar.flashCardsIsarModels.filter().deckIdEqualTo(deckId).and().deletedAtIsNull().count();
-
-      // 3. Update deck.cardsCount
+      // 3. Update deck.cardsCount with given count
       deck
-        ..cardsCount = cardsCount
+        ..cardsCount = (deck.cardsCount ?? 0) + cardsCount
         ..updatedAt = DateTime.now();
 
-      // 4. Update collection.cardCount using collectionId from deck
+      // 4. Get collectionId from deck
       final collectionId = deck.collectionId;
       if (collectionId == null) {
         log('updateDeckAndCollectionCounts: Deck has no collectionId');
-        // Still persist deck change
         await _isar.writeTxn(() async {
           await _isar.decksIsarModels.put(deck);
         });
@@ -125,6 +122,7 @@ class FlashCardsRepository {
         return;
       }
 
+      // 5. Load collection
       final collection = await _isar.flashCardsCollectionIsarModels.where().idEqualTo(parsedCollectionId).findFirst();
 
       if (collection == null) {
@@ -135,19 +133,11 @@ class FlashCardsRepository {
         return;
       }
 
-      final decksInCollection = await _isar.decksIsarModels
-          .filter()
-          .collectionIdEqualTo(collectionId)
-          .and()
-          .deletedAtIsNull()
-          .findAll();
-
-      final totalCardsInCollection = decksInCollection.fold<int>(0, (sum, d) => sum + (d.cardsCount ?? 0));
-
       collection
-        ..cardCount = totalCardsInCollection
+        ..cardCount = (collection.cardCount ?? 0) + cardsCount
         ..updatedAt = DateTime.now();
 
+      // 7. Persist deck and collection in a single transaction
       await _isar.writeTxn(() async {
         await _isar.decksIsarModels.put(deck);
         await _isar.flashCardsCollectionIsarModels.put(collection);

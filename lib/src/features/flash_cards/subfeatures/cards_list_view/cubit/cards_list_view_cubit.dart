@@ -38,7 +38,7 @@ class CardsListViewCubit extends Cubit<CardsListViewState> {
   Future<void> deleteCard(String cardId) async {
     try {
       await _repository.deleteFlashCard(cardId);
-      await _repository.updateDeckAndCollectionCounts(decksId);
+      await _repository.updateDeckAndCollectionCounts(decksId, -1);
       emit(DeleteCardSuccessState());
     } catch (e) {
       emit(DeleteCardErrorState(e.toString()));
