@@ -13,7 +13,7 @@ class ProjectLocalService {
       return;
     }
 
-    _isar = await IsarDatabase.getInstance();
+    _isar = IsarService.instance.isar;
     _isInitialized = true;
   }
 
@@ -30,11 +30,7 @@ class ProjectLocalService {
           0,
           1,
         );
-    return _isar.projectSchemaModels
-        .filter()
-        .createdAtGreaterThan(startDate)
-        .sortByCreatedAtDesc()
-        .watch(fireImmediately: true);
+    return _isar.projectSchemaModels.filter().createdAtGreaterThan(startDate).sortByCreatedAtDesc().watch(fireImmediately: true);
   }
 
   // ⭐ WATCH - Stream all projects for a specific date
@@ -79,54 +75,35 @@ class ProjectLocalService {
 
   // READ - Get projects sorted by name
   Future<List<ProjectSchemaModel>> getProjectsSortedByName() async {
-    return await _isar.projectSchemaModels
-        .where()
-        .sortByProjectName()
-        .findAll();
+    return await _isar.projectSchemaModels.where().sortByProjectName().findAll();
   }
 
   // READ - Get projects by color tag
   Future<List<ProjectSchemaModel>> getProjectsByColor(int color) async {
-    return await _isar.projectSchemaModels
-        .filter()
-        .tagColorEqualTo(color)
-        .findAll();
+    return await _isar.projectSchemaModels.filter().tagColorEqualTo(color).findAll();
   }
 
   // READ - Search projects by name (case-insensitive)
   Future<List<ProjectSchemaModel>> searchProjectsByName(String query) async {
-    return await _isar.projectSchemaModels
-        .filter()
-        .projectNameContains(query, caseSensitive: false)
-        .findAll();
+    return await _isar.projectSchemaModels.filter().projectNameContains(query, caseSensitive: false).findAll();
   }
 
   // READ - Get projects with time goals
   Future<List<ProjectSchemaModel>> getProjectsWithTimeGoals() async {
-    return await _isar.projectSchemaModels
-        .filter()
-        .hasTimeGoalEqualTo(true)
-        .findAll();
+    return await _isar.projectSchemaModels.filter().hasTimeGoalEqualTo(true).findAll();
   }
 
   // READ - Get projects by frequency type
   Future<List<ProjectSchemaModel>> getProjectsByFrequency(
     TimeGoalFrequency frequency,
   ) async {
-    return await _isar.projectSchemaModels
-        .filter()
-        .timeGoalFrequencyEqualTo(frequency)
-        .findAll();
+    return await _isar.projectSchemaModels.filter().timeGoalFrequencyEqualTo(frequency).findAll();
   }
 
   // READ - Get recent projects (last 30 days)
   Future<List<ProjectSchemaModel>> getRecentProjects() async {
     final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
-    return await _isar.projectSchemaModels
-        .filter()
-        .createdAtGreaterThan(thirtyDaysAgo)
-        .sortByCreatedAtDesc()
-        .findAll();
+    return await _isar.projectSchemaModels.filter().createdAtGreaterThan(thirtyDaysAgo).sortByCreatedAtDesc().findAll();
   }
 
   // UPDATE - Update existing project
