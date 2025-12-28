@@ -14,8 +14,14 @@ void main() async {
 
   await IsarService.instance.initialize();
 
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+
   SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      systemNavigationBarColor: Colors.white, // Default to white
+      systemNavigationBarIconBrightness: Brightness.dark, // Dark icons for light background
+    ),
   );
 
   final savedThemeMode = await AdaptiveTheme.getThemeMode();
