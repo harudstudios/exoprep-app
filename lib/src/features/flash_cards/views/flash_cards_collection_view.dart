@@ -28,14 +28,19 @@ class _FlashCardsCollectionViewState extends State<FlashCardsCollectionView> {
             slivers: [
               SliverAppBar(
                 floating: true,
-                snap: true,
-                expandedHeight: 100,
                 backgroundColor: context.theme.scaffoldBackgroundColor,
                 surfaceTintColor: context.theme.colorScheme.surface,
                 elevation: 0,
                 actions: [
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade500),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(Icons.more_vert),
+                  ),
+                  const SizedBox(width: 8),
                 ],
                 flexibleSpace: FlexibleSpaceBar(
                   titlePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
