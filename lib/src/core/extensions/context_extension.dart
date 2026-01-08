@@ -26,8 +26,7 @@ extension ContextExtension on BuildContext {
   bool get isDarkMode => Theme.of(this).brightness == Brightness.dark;
 
   /// Check if the device is in landscape orientation
-  bool get isLandscape =>
-      MediaQuery.of(this).orientation == Orientation.landscape;
+  bool get isLandscape => MediaQuery.of(this).orientation == Orientation.landscape;
 
   /// Check if the device is a tablet (based on shortest side >= 600dp)
   bool get isTablet => screenSize.shortestSide >= 600;
@@ -154,16 +153,6 @@ extension ContextExtension on BuildContext {
   bool get canPop => Navigator.of(this).canPop();
 
   /*------------ Utility Methods ------------*/
-
-  /// Show a snack bar with the given message
-  void showSnackBar(String message, {Duration? duration}) {
-    ScaffoldMessenger.of(this).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: duration ?? const Duration(seconds: 3),
-      ),
-    );
-  }
 
   /// Hide the current snack bar
   void hideSnackBar() => ScaffoldMessenger.of(this).hideCurrentSnackBar();

@@ -12,10 +12,16 @@ void main() async {
 
   await Future.delayed(const Duration(milliseconds: 50));
 
-  await IsarDatabase.getInstance();
+  await IsarService.instance.initialize();
+
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
 
   SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarIconBrightness: Brightness.dark,
+    ),
   );
 
   final savedThemeMode = await AdaptiveTheme.getThemeMode();
