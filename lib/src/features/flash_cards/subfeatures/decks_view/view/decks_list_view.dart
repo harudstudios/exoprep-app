@@ -3,12 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:root/src/core/navigation/router.dart';
 import 'package:root/src/core/navigation/routes.dart';
 import 'package:root/src/core/extensions/context_extension.dart';
 import 'package:root/src/features/flash_cards/subfeatures/decks_view/cubit/decks_view_cubit.dart';
 import 'package:root/src/features/flash_cards/subfeatures/decks_view/widgets/decks_list_tile.dart';
 import 'package:root/src/features/flash_cards/subfeatures/decks_view/widgets/create_decks_widget.dart';
-import 'package:root/src/features/flash_cards/subfeatures/decks_view/widgets/flas_cards_study_view.dart';
+import 'package:root/src/features/flash_cards/subfeatures/decks_view/widgets/flash_cards_study_view.dart';
 
 class DecksListView extends StatefulWidget {
   const DecksListView({super.key, required this.collectionId, required this.collectionName});
@@ -31,23 +32,49 @@ class _DecksListViewState extends State<DecksListView> {
             slivers: [
               SliverAppBar(
                 floating: true,
-                snap: true,
                 backgroundColor: context.theme.scaffoldBackgroundColor,
                 surfaceTintColor: context.theme.colorScheme.surface,
                 elevation: 0,
+                leading: Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      router.pop();
+                    },
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade500),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(child: const Icon(Icons.arrow_back, size: 18)),
+                    ),
+                  ),
+                ),
+                flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: true,
+                  title: Text(
+                    widget.collectionName,
+                    style: TextStyle(color: context.bodyLarge?.color, fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                ),
                 actions: [
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 12.0),
+                    child: Center(
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade500),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(Icons.more_vert, size: 20),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(widget.collectionName, style: context.headlineMedium),
-                ),
-              ),
-
               if (state is LoadingState && context.read<DecksViewCubit>().decks.isEmpty) ...[
                 const SliverFillRemaining(child: Center(child: CircularProgressIndicator())),
               ] else if (state is DecksLoadedState || context.read<DecksViewCubit>().decks.isNotEmpty) ...[

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:root/src/core/navigation/router.dart';
 import 'package:root/src/core/navigation/routes.dart';
 import 'package:root/src/core/extensions/context_extension.dart';
 import 'package:root/src/features/flash_cards/subfeatures/cards_list_view/cubit/cards_list_view_cubit.dart';
@@ -31,23 +32,50 @@ class _CardsListViewState extends State<CardsListView> {
             slivers: [
               SliverAppBar(
                 floating: true,
-                snap: true,
-                title: Text(widget.deckName, style: context.titleLarge),
-                centerTitle: true,
                 backgroundColor: context.theme.scaffoldBackgroundColor,
                 surfaceTintColor: context.theme.colorScheme.surface,
                 elevation: 0,
+                leading: Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      router.pop();
+                    },
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade500),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(child: const Icon(Icons.arrow_back, size: 18)),
+                    ),
+                  ),
+                ),
+                flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: true,
+                  title: Text(
+                    widget.deckName,
+                    style: TextStyle(color: context.bodyLarge?.color, fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                ),
                 actions: [
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 12.0),
+                    child: Center(
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade500),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(Icons.more_vert, size: 20),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-              // SliverToBoxAdapter(
-              //   child: Padding(
-              //     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              //     child: Text(widget.deckName, style: context.headlineMedium),
-              //   ),
-              // ),
+
               if (state is LoadingState)
                 const SliverFillRemaining(child: Center(child: CircularProgressIndicator()))
               else if (state is LoadCardsErrorState)
@@ -56,7 +84,7 @@ class _CardsListViewState extends State<CardsListView> {
                 const SliverFillRemaining(child: Center(child: Text('No cards yet. Tap + to add your first card!')))
               else
                 SliverPadding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
                       final cubit = context.read<CardsListViewCubit>();
