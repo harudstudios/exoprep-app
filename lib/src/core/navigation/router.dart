@@ -5,15 +5,26 @@ import 'package:root/src/core/app/landing.dart';
 import 'package:root/src/core/navigation/routes.dart';
 import 'package:root/src/features/home/home_view.dart';
 import 'package:root/src/features/profile/profile_view.dart';
+import 'package:root/src/features/questions/questions_view.dart';
+import 'package:root/src/models/paper_model/paper_model.dart';
 import 'package:root/src/core/navigation/route_transition.dart';
+import 'package:root/src/features/read_paper/read_paper_view.dart';
 import 'package:root/src/features/project_form/project_form_view.dart';
 import 'package:root/src/features/select_exams/select_exams_view.dart';
+import 'package:root/src/features/attempt_paper/instructions_view.dart';
+import 'package:root/src/features/attempt_paper/attempt_paper_view.dart';
 import 'package:root/src/features/authentication/authentication_view.dart';
 import 'package:root/src/features/leaderboard/views/screen/leaderboard_screen.dart';
+import 'package:root/src/features/exam_dashboard/exam_dashboard_view.dart';
 import 'package:root/src/features/flash_cards/views/flash_cards_collection_screen.dart';
 import 'package:root/src/features/flash_cards/subfeatures/decks_view/view/decks_list_screen.dart';
 import 'package:root/src/features/flash_cards/subfeatures/cards_list_view/view/cards_list_screen.dart';
 import 'package:root/src/features/flash_cards/subfeatures/create_flash_card/view/create_flash_cards_screen.dart';
+import 'package:root/src/models/question_model/question_model.dart';
+import 'package:root/src/models/subject_model/subject_model.dart';
+
+/// Global router configuration for the application
+/// This handles all navigation routing and transitions
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorHomeKey = GlobalKey<NavigatorState>(debugLabel: 'home');
@@ -69,6 +80,61 @@ final router = GoRouter(
         );
       },
     ),
+    /* Papers */
+    GoRoute(
+      path: AppRoute.readPaper.path,
+      name: AppRoute.readPaper.name,
+      pageBuilder: (context, state) {
+        final paper = state.extra as Paper;
+
+        return AppRouteTransition.slideFromBottom(
+          child: ReadPaperView(paper: paper),
+          key: state.pageKey,
+        );
+      },
+    ),
+
+    GoRoute(
+      path: AppRoute.instructions.path,
+      name: AppRoute.instructions.name,
+      pageBuilder: (context, state) {
+        final paper = state.extra as Paper;
+
+        return AppRouteTransition.slideFromBottom(
+          child: InstructionsView(paper: paper),
+          key: state.pageKey,
+        );
+      },
+    ),
+
+    GoRoute(
+      path: AppRoute.attemptPaper.path,
+      name: AppRoute.attemptPaper.name,
+      pageBuilder: (context, state) {
+        final paper = state.extra as Paper;
+
+        return AppRouteTransition.slideFromRight(
+          child: AttemptPaperView(paper: paper),
+          key: state.pageKey,
+        );
+      },
+    ),
+
+    GoRoute(
+      path: AppRoute.questions.path,
+      name: AppRoute.questions.name,
+      pageBuilder: (context, state) {
+        final params = state.extra as Map<String, dynamic>;
+        final paper = params['paper'] as Paper;
+        final subjects = params['subjects'] as List<Subject>;
+        final questions = params['questions'] as List<Question>;
+
+        return AppRouteTransition.slideFromRight(
+          child: QuestionsView(paper: paper, subjects: subjects, questions: questions),
+          key: state.pageKey,
+        );
+      },
+    ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
         return Landing(navigationShell: navigationShell);
@@ -85,7 +151,7 @@ final router = GoRouter(
                 GoRoute(
                   path: AppRoute.examDashboard.path,
                   pageBuilder: (context, state) =>
-                      AppRouteTransition.slideFromRight(child: const DetailsScreen(), key: state.pageKey),
+                      AppRouteTransition.slideFromRight(child: const ExamDashboardView(), key: state.pageKey),
                 ),
               ],
             ),
@@ -185,14 +251,5 @@ class RootScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class DetailsScreen extends StatelessWidget {
-  const DetailsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: const Text('Detail Screen')));
   }
 }
