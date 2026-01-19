@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:root/src/core/constants/enums.dart';
+import 'package:root/src/core/navigation/routes.dart';
 import 'package:root/src/models/paper_model/paper_model.dart';
 import 'package:root/src/core/extensions/context_extension.dart';
 import 'package:root/src/core/common/state/viewmodel_state.dart';
@@ -41,12 +44,7 @@ class _QuestionsViewState extends State<QuestionsView> with QuestionsMixin {
         child: Scaffold(
           drawer: QuestionsDrawer(viewModel: viewModel, questions: widget.questions, subjects: widget.subjects),
           appBar: _QuestionsAppBar(paperName: widget.paper.name, subjects: widget.subjects),
-          body: _QuestionsBody(
-            viewModel: viewModel,
-            subjects: widget.subjects,
-            questions: widget.questions,
-            paperID: widget.paper.id,
-          ),
+          body: _QuestionsBody(viewModel: viewModel, subjects: widget.subjects, questions: widget.questions, paper: widget.paper),
         ),
       ),
     );
@@ -63,7 +61,7 @@ class _QuestionsAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(paperName, style: context.titleMedium),
-      actions: [IconButton(onPressed: () => context.pop(), icon: const Icon(Icons.close))],
+      actions: [IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close))],
       bottom: _QuestionsTabBar(subjects: subjects),
     );
   }
@@ -105,19 +103,19 @@ class _QuestionsTabBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class _QuestionsBody extends StatelessWidget {
-  const _QuestionsBody({required this.paperID, required this.viewModel, required this.subjects, required this.questions});
+  const _QuestionsBody({required this.paper, required this.viewModel, required this.subjects, required this.questions});
 
   final QuestionsViewModel viewModel;
   final List<Subject> subjects;
   final List<Question> questions;
-  final String paperID;
+  final Paper paper;
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<ViewModelState>(
       valueListenable: viewModel.questionsState,
       builder: (context, state, _) {
-        if (state.status == ViewModelStatus.loading) {
+        if (state.status == ViewModelStatus.loading && state.data == QuestionStates.dataLoading) {
           return const _LoadingView();
         }
 
@@ -125,7 +123,7 @@ class _QuestionsBody extends StatelessWidget {
           return _ErrorView(errorMessage: state.error);
         }
 
-        return _QuestionsTabBarView(subjects: subjects, questions: questions, viewModel: viewModel, paperID: paperID);
+        return _QuestionsTabBarView(subjects: subjects, questions: questions, viewModel: viewModel, paper: paper);
       },
     );
   }
@@ -167,9 +165,9 @@ class _EmptyQuestionsView extends StatelessWidget {
 }
 
 class _QuestionsTabBarView extends StatelessWidget {
-  const _QuestionsTabBarView({required this.paperID, required this.subjects, required this.questions, required this.viewModel});
+  const _QuestionsTabBarView({required this.paper, required this.subjects, required this.questions, required this.viewModel});
 
-  final String paperID;
+  final Paper paper;
   final List<Subject> subjects;
   final List<Question> questions;
   final QuestionsViewModel viewModel;
@@ -185,12 +183,12 @@ class _QuestionsTabBarView extends StatelessWidget {
         }
 
         return _QuestionsPageView(
-          subject: subject,
-          subjects: subjects,
           questions: subjectQuestions,
           allQuestions: questions,
           viewModel: viewModel,
-          paperID: paperID,
+          subjects: subjects,
+          subject: subject,
+          paper: paper,
         );
       }).toList(),
     );
@@ -199,20 +197,20 @@ class _QuestionsTabBarView extends StatelessWidget {
 
 class _QuestionsPageView extends StatefulWidget {
   const _QuestionsPageView({
+    required this.paper,
     required this.subject,
     required this.subjects,
     required this.questions,
-    required this.allQuestions,
     required this.viewModel,
-    required this.paperID,
+    required this.allQuestions,
   });
 
+  final Paper paper;
   final Subject subject;
   final List<Subject> subjects;
   final List<Question> questions;
   final List<Question> allQuestions;
   final QuestionsViewModel viewModel;
-  final String paperID;
 
   @override
   State<_QuestionsPageView> createState() => _QuestionsPageViewState();
@@ -259,8 +257,8 @@ class _QuestionsPageViewState extends State<_QuestionsPageView> with AutomaticKe
               currentIndex: currentIndex,
               totalQuestionsInSubject: widget.questions.length,
               currentQuestion: widget.questions[currentIndex],
-              paperId: widget.paperID,
               allQuestions: widget.allQuestions,
+              paper: widget.paper,
             ),
           ],
         );

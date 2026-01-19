@@ -10,6 +10,8 @@ mixin QuestionsMixin on State<QuestionsView> {
     viewModel.initializeQuestions(widget.questions);
   }
 
+  void handleQuestionStates() {}
+
   @override
   void dispose() {
     viewModel.dispose();
