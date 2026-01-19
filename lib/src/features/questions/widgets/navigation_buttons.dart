@@ -1,15 +1,15 @@
 part of '../questions_view.dart';
 
-class _NavigationButtons extends StatelessWidget {
+class _NavigationButtons extends StatefulWidget {
   const _NavigationButtons({
-    required this.viewModel,
-    required this.subject,
-    required this.subjects,
-    required this.currentIndex,
     required this.totalQuestionsInSubject,
     required this.currentQuestion,
+    required this.currentIndex,
     required this.allQuestions,
-    required this.paperId,
+    required this.viewModel,
+    required this.subjects,
+    required this.subject,
+    required this.paper,
   });
 
   final Subject subject;
@@ -19,33 +19,42 @@ class _NavigationButtons extends StatelessWidget {
   final QuestionsViewModel viewModel;
   final List<Question> allQuestions;
   final Question currentQuestion;
-  final String paperId;
+  final Paper paper;
 
-  bool get _isLastQuestionInSubject => currentIndex >= totalQuestionsInSubject - 1;
+  @override
+  State<_NavigationButtons> createState() => _NavigationButtonsState();
+}
+
+class _NavigationButtonsState extends State<_NavigationButtons> {
+  bool _isSubmitting = false;
+
+  bool get _isLastQuestionInSubject => widget.currentIndex >= widget.totalQuestionsInSubject - 1;
 
   bool get _isLastSubject {
-    final currentSubjectIndex = subjects.indexWhere((s) => s.id == subject.id);
-    return currentSubjectIndex == subjects.length - 1;
+    final currentSubjectIndex = widget.subjects.indexWhere((s) => s.id == widget.subject.id);
+    return currentSubjectIndex == widget.subjects.length - 1;
   }
 
   void _goToNextSection(BuildContext context) {
-    final currentSubjectIndex = subjects.indexWhere((s) => s.id == subject.id);
-    if (currentSubjectIndex < subjects.length - 1) {
+    final currentSubjectIndex = widget.subjects.indexWhere((s) => s.id == widget.subject.id);
+    if (currentSubjectIndex < widget.subjects.length - 1) {
       DefaultTabController.of(context).animateTo(currentSubjectIndex + 1);
-      final nextSubject = subjects[currentSubjectIndex + 1];
-      viewModel.jumpToQuestionInSubject(nextSubject.id, 0);
+      final nextSubject = widget.subjects[currentSubjectIndex + 1];
+      widget.viewModel.jumpToQuestionInSubject(nextSubject.id, 0);
     }
   }
 
   Future<void> _handleFinish(BuildContext context) async {
-    final totalQuestionsCount = allQuestions.length;
-    final attemptedCount = viewModel.attemptedCount;
+    if (_isSubmitting) return;
+
+    final totalQuestionsCount = widget.allQuestions.length;
+    final attemptedCount = widget.viewModel.attemptedCount;
     final unattemptedCount = totalQuestionsCount - attemptedCount;
 
     final bool? shouldSubmit = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return FinishPaperDialog(
           totalQuestions: totalQuestionsCount,
           attemptedCount: attemptedCount,
@@ -54,15 +63,66 @@ class _NavigationButtons extends StatelessWidget {
       },
     );
 
-    if (shouldSubmit == true && context.mounted) {
-      await viewModel.submitQuiz(paperId, allQuestions);
+    if (shouldSubmit != true || !mounted) return;
 
-      if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Test submitted successfully!'), backgroundColor: Colors.green));
-        // TODO: Navigate to results page
-        // context.go('/results');
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return const _SubmittingDialog();
+      },
+    );
+
+    try {
+      final attemptedQuestions = widget.viewModel.prepareSubmissionData(widget.paper.id, widget.allQuestions);
+      await widget.viewModel.submitPaper(widget.paper.id, widget.allQuestions);
+      if (!mounted) return;
+      final state = widget.viewModel.questionsState.value;
+      Navigator.of(context).pop();
+      if (state.status == ViewModelStatus.success && state.type == QuestionStates.submissionSuccess) {
+        await Future.delayed(const Duration(milliseconds: 500));
+        if (mounted) {
+          context.pushReplacement(
+            AppRoute.paperResult.path,
+            extra: {
+              'paper': widget.paper,
+              'subjects': widget.subjects,
+              'questions': widget.allQuestions,
+              'attempted_questions': attemptedQuestions,
+            },
+          );
+        }
+      } else if (state.status == ViewModelStatus.error && state.type == QuestionStates.submissionError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(state.error ?? 'Failed to submit test'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
+            action: SnackBarAction(label: 'Retry', textColor: Colors.white, onPressed: () => _handleFinish(context)),
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 3),
+          action: SnackBarAction(label: 'Retry', textColor: Colors.white, onPressed: () => _handleFinish(context)),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
       }
     }
   }
@@ -81,18 +141,20 @@ class _NavigationButtons extends StatelessWidget {
     return Icons.arrow_forward;
   }
 
-  VoidCallback _getButtonAction(BuildContext context) {
+  VoidCallback? _getButtonAction(BuildContext context) {
+    if (_isSubmitting) return null;
+
     if (_isLastQuestionInSubject) {
       return _isLastSubject ? () => _handleFinish(context) : () => _goToNextSection(context);
     }
-    return () => viewModel.nextQuestion(subject.id);
+    return () => widget.viewModel.nextQuestion(widget.subject.id);
   }
 
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDarkMode;
     final colorScheme = context.colorScheme;
-    final isFirstQuestion = currentIndex == 0;
+    final isFirstQuestion = widget.currentIndex == 0;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -107,7 +169,7 @@ class _NavigationButtons extends StatelessWidget {
             if (!isFirstQuestion) ...[
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: () => viewModel.previousQuestion(subject.id),
+                  onPressed: _isSubmitting ? null : () => widget.viewModel.previousQuestion(widget.subject.id),
                   icon: const Icon(Icons.arrow_back, size: 18),
                   label: const Text('Previous'),
                   style: OutlinedButton.styleFrom(
@@ -119,11 +181,11 @@ class _NavigationButtons extends StatelessWidget {
               const SizedBox(width: 12),
             ],
             ValueListenableBuilder<Set<String>>(
-              valueListenable: viewModel.markedForLater,
+              valueListenable: widget.viewModel.markedForLater,
               builder: (context, markedForLater, _) {
-                final isMarked = markedForLater.contains(currentQuestion.id);
+                final isMarked = markedForLater.contains(widget.currentQuestion.id);
                 return OutlinedButton(
-                  onPressed: () => viewModel.markForLater(currentQuestion.id),
+                  onPressed: _isSubmitting ? null : () => widget.viewModel.markForLater(widget.currentQuestion.id),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                     backgroundColor: isMarked
@@ -154,6 +216,43 @@ class _NavigationButtons extends StatelessWidget {
                   backgroundColor: colorScheme.primary,
                 ),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SubmittingDialog extends StatelessWidget {
+  const _SubmittingDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = context.isDarkMode;
+
+    return PopScope(
+      canPop: false,
+      child: AlertDialog(
+        backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(color: context.colorScheme.primary),
+            const SizedBox(height: 20),
+            Text(
+              'Submitting your test...',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: isDark ? const Color(0xFFE5E5E5) : const Color(0xFF1F2937),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Please wait',
+              style: TextStyle(fontSize: 14, color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280)),
             ),
           ],
         ),

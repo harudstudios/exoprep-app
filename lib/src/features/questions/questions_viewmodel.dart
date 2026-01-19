@@ -1,3 +1,4 @@
+import 'package:root/src/core/constants/enums.dart';
 import 'package:root/src/models/question_model/attempted_question_model.dart';
 import 'package:root/src/models/question_model/question_model.dart';
 import 'package:root/src/core/common/state/viewmodel_state.dart';
@@ -30,11 +31,10 @@ class QuestionsViewModel {
 
   void initializeQuestions(List<Question> questions) {
     if (questions.isEmpty) {
-      questionsState.value = ViewModelState.error(error: 'No questions available');
+      questionsState.value = ViewModelState.error(error: 'No questions available', type: QuestionStates.dataLoadingError);
       return;
     }
-
-    questionsState.value = ViewModelState.success(data: questions);
+    questionsState.value = ViewModelState.success(data: questions, type: QuestionStates.dataLoadedSuccess);
   }
 
   void setCurrentQuestionIndex(int index) {
@@ -151,34 +151,28 @@ class QuestionsViewModel {
     return AttemptedQuestions(paperId: paperId, questions: attemptedQuestions);
   }
 
-  Future<void> submitQuiz(String paperId, List<Question> allQuestions) async {
+  Future<void> submitPaper(String paperId, List<Question> allQuestions) async {
     try {
-      setLoading();
+      // Use data for loading state
+      questionsState.value = ViewModelState.loading(mode: QuestionStates.submissionLoading);
 
       final submissionData = prepareSubmissionData(paperId, allQuestions);
 
       debugPrint('Submission Data: ${jsonEncode(submissionData.toJson())}');
 
-      // TODO: Replace with your actual API call
-      // final response = await http.post(
-      //   Uri.parse('YOUR_API_ENDPOINT'),
-      //   headers: {'Content-Type': 'application/json'},
-      //   body: jsonEncode(submissionData.toJson()),
-      // );
-
-      // if (response.statusCode == 200) {
-      //   debugPrint('Quiz submitted successfully');
-      //   questionsState.value = ViewModelState.success(data: 'Submitted');
-      // } else {
-      //   throw Exception('Failed to submit quiz');
-      // }
-
       // Simulate API call
-      await Future.delayed(const Duration(seconds: 1));
-      questionsState.value = ViewModelState.success(data: 'Submitted');
+      await Future.delayed(const Duration(seconds: 2));
+
+      // Use type for success state
+      questionsState.value = ViewModelState.success(data: 'Submitted', type: QuestionStates.submissionSuccess);
     } catch (e) {
-      debugPrint('Error submitting quiz: $e');
-      setError('Failed to submit quiz: $e');
+      debugPrint('Error submitting paper: $e');
+      // Use type for error state
+      questionsState.value = ViewModelState.error(
+        error: 'Failed to submit paper: ${e.toString()}',
+        type: QuestionStates.submissionError,
+      );
+      rethrow;
     }
   }
 

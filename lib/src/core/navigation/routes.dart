@@ -27,6 +27,7 @@ enum AppRoute {
   instructions('/instructions'),
   attemptPaper('/attemptPaper'),
   questions('/questions'),
+  paperResult('/paperResult'),
 
   /* Productivity */
   createProjectForm('/createProjectForm');
