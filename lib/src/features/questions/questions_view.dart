@@ -14,12 +14,14 @@ import 'package:root/src/features/questions/questions_viewmodel.dart';
 import 'package:root/src/core/common/ui/widgets/theme_toggle_switch.dart';
 
 part 'widgets/finish_paper_dialog.dart';
+part 'widgets/quit_paper_dialog.dart';
 part 'widgets/navigation_buttons.dart';
 part 'widgets/questions_drawer.dart';
 part 'widgets/question_number.dart';
 part 'widgets/question_title.dart';
 part 'widgets/question_image.dart';
 part 'widgets/question_card.dart';
+part 'widgets/timer_widget.dart';
 part 'widgets/option_tile.dart';
 part 'questions_mixin.dart';
 
@@ -35,16 +37,52 @@ class QuestionsView extends StatefulWidget {
 }
 
 class _QuestionsViewState extends State<QuestionsView> with QuestionsMixin {
+  Future<bool> _onWillPop() async {
+    final bool? shouldQuit = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return _QuitPaperDialog(
+          attemptedCount: viewModel.attemptedCount,
+          totalQuestions: widget.questions.length, // Correct total
+        );
+      },
+    );
+
+    return shouldQuit ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: widget.subjects.length,
-      child: GestureDetector(
-        onTap: () => context.unfocus(),
-        child: Scaffold(
-          drawer: QuestionsDrawer(viewModel: viewModel, questions: widget.questions, subjects: widget.subjects),
-          appBar: _QuestionsAppBar(paperName: widget.paper.name, subjects: widget.subjects),
-          body: _QuestionsBody(viewModel: viewModel, subjects: widget.subjects, questions: widget.questions, paper: widget.paper),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+
+        final shouldPop = await _onWillPop();
+        if (shouldPop && context.mounted) {
+          Navigator.of(context).pop();
+        }
+      },
+      child: DefaultTabController(
+        length: widget.subjects.length,
+        child: GestureDetector(
+          onTap: () => context.unfocus(),
+          child: Scaffold(
+            drawer: QuestionsDrawer(viewModel: viewModel, questions: widget.questions, subjects: widget.subjects),
+            appBar: _QuestionsAppBar(
+              paperName: widget.paper.name,
+              subjects: widget.subjects,
+              viewModel: viewModel,
+              totalQuestions: widget.questions.length, // Pass the correct total
+            ),
+            body: _QuestionsBody(
+              viewModel: viewModel,
+              subjects: widget.subjects,
+              questions: widget.questions,
+              paper: widget.paper,
+            ),
+          ),
         ),
       ),
     );
@@ -52,16 +90,50 @@ class _QuestionsViewState extends State<QuestionsView> with QuestionsMixin {
 }
 
 class _QuestionsAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _QuestionsAppBar({required this.paperName, required this.subjects});
+  const _QuestionsAppBar({
+    required this.paperName,
+    required this.subjects,
+    required this.viewModel,
+    required this.totalQuestions, // Add this parameter
+  });
 
   final String paperName;
   final List<Subject> subjects;
+  final QuestionsViewModel viewModel;
+  final int totalQuestions; // Add this
+
+  Future<void> _handleQuit(BuildContext context) async {
+    final bool? shouldQuit = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return _QuitPaperDialog(
+          attemptedCount: viewModel.attemptedCount,
+          totalQuestions: totalQuestions, // Use the passed total
+        );
+      },
+    );
+
+    if (shouldQuit == true && context.mounted) {
+      Navigator.of(context).pop();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(paperName, style: context.titleMedium),
-      actions: [IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close))],
+      actions: [
+        _TimerWidget(viewModel: viewModel),
+        const SizedBox(width: 8),
+        IconButton(
+          onPressed: () => _handleQuit(context),
+          icon: Icon(Icons.close_rounded),
+          tooltip: 'Quit Test',
+          style: IconButton.styleFrom(backgroundColor: Colors.red.withValues(alpha: 0.1), foregroundColor: Colors.red),
+        ),
+        const SizedBox(width: 4),
+      ],
       bottom: _QuestionsTabBar(subjects: subjects),
     );
   }

@@ -1,32 +1,40 @@
-import 'dart:developer';
-
-import 'package:root/src/core/constants/enums.dart';
 import 'package:root/src/models/question_model/attempted_question_model.dart';
 import 'package:root/src/models/question_model/paper_submission.dart';
 import 'package:root/src/models/question_model/question_model.dart';
 import 'package:root/src/core/common/state/viewmodel_state.dart';
-import 'package:flutter/material.dart';
-import 'dart:convert';
-
 import 'package:root/src/repositories/papers_repository.dart';
+import 'package:root/src/core/constants/enums.dart';
+import 'package:flutter/material.dart';
+import 'dart:developer';
+import 'dart:convert';
+import 'dart:async';
 
 class QuestionsViewModel {
   final PapersRepository _papersRepository;
 
+  // ==================== DEBUG CONFIGURATION ====================
+  // Set to true for testing with shorter timer
+  static const bool _debugMode = false; // Change to false for production
+
+  // Alternatively, use different test durations:
+  static const int _debugTimerSeconds = 30; // 30 seconds
+  // static const int _debugTimerSeconds = 60;  // 1 minute
+  // static const int _debugTimerSeconds = 300; // 5 minutes
+  // ============================================================
+
   QuestionsViewModel({PapersRepository? papersRepository}) : _papersRepository = papersRepository ?? PapersRepository();
 
   final ValueNotifier<ViewModelState> questionsState = ValueNotifier(ViewModelState.idle(data: QuestionStates.idle));
-
   final ValueNotifier<int> currentQuestionIndex = ValueNotifier(0);
-
   final ValueNotifier<Map<String, List<int>>> selectedAnswers = ValueNotifier({});
-
   final ValueNotifier<Map<String, String>> numericalAnswers = ValueNotifier({});
-
   final ValueNotifier<Set<String>> markedForLater = ValueNotifier({});
 
-  // Track test start time
+  // Timer related
+  final ValueNotifier<int> remainingSeconds = ValueNotifier(0);
   DateTime? testStartTime;
+  Timer? _countdownTimer;
+  VoidCallback? onTimerEnd;
 
   final Map<String, PageController> _subjectPageControllers = {};
   final Map<String, ValueNotifier<int>> _subjectQuestionIndices = {};
@@ -39,7 +47,7 @@ class QuestionsViewModel {
     return _subjectQuestionIndices.putIfAbsent(subjectId, () => ValueNotifier(0));
   }
 
-  void initializeQuestions(List<Question> questions) {
+  void initializeQuestions(List<Question> questions, int durationInMinutes) {
     if (questions.isEmpty) {
       questionsState.value = ViewModelState.error(error: 'No questions available', type: QuestionStates.dataLoadingError);
       return;
@@ -48,7 +56,65 @@ class QuestionsViewModel {
     // Start tracking test time
     testStartTime = DateTime.now();
 
+    // Initialize countdown timer with debug override
+    if (_debugMode) {
+      remainingSeconds.value = _debugTimerSeconds;
+      debugPrint('⚠️ DEBUG MODE ACTIVE ⚠️');
+      debugPrint('Timer set to $_debugTimerSeconds seconds for testing');
+      debugPrint('Set _debugMode = false for production');
+    } else {
+      remainingSeconds.value = durationInMinutes * 60;
+      debugPrint('Timer set to $durationInMinutes minutes (${durationInMinutes * 60} seconds)');
+    }
+
+    _startCountdown();
+
     questionsState.value = ViewModelState.success(data: questions, type: QuestionStates.dataLoadedSuccess);
+  }
+
+  void _startCountdown() {
+    _countdownTimer?.cancel();
+    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (remainingSeconds.value > 0) {
+        remainingSeconds.value--;
+
+        // Debug logging for last 10 seconds
+        if (_debugMode && remainingSeconds.value <= 10) {
+          debugPrint('⏱️ Timer: ${remainingSeconds.value} seconds remaining');
+        }
+      } else {
+        timer.cancel();
+        debugPrint('⏰ Timer ended - triggering auto-submit');
+
+        // Auto-submit when timer ends
+        if (onTimerEnd != null) {
+          onTimerEnd!();
+        }
+      }
+    });
+  }
+
+  String getFormattedTime() {
+    final hours = remainingSeconds.value ~/ 3600;
+    final minutes = (remainingSeconds.value % 3600) ~/ 60;
+    final seconds = remainingSeconds.value % 60;
+
+    if (hours > 0) {
+      return '${hours.toString().padLeft(2, '0')}:'
+          '${minutes.toString().padLeft(2, '0')}:'
+          '${seconds.toString().padLeft(2, '0')}';
+    }
+    return '${minutes.toString().padLeft(2, '0')}:'
+        '${seconds.toString().padLeft(2, '0')}';
+  }
+
+  bool get isTimerCritical {
+    // In debug mode with short timer, make last 5 seconds critical
+    if (_debugMode && _debugTimerSeconds <= 30) {
+      return remainingSeconds.value <= 5;
+    }
+    // In production, last 5 minutes (300 seconds) is critical
+    return remainingSeconds.value <= 300;
   }
 
   void setCurrentQuestionIndex(int index) {
@@ -141,7 +207,6 @@ class QuestionsViewModel {
 
   AttemptedQuestions prepareSubmissionData(String paperId, List<Question> allQuestions) {
     final List<AttemptedQuestion> attemptedQuestions = allQuestions.map((question) {
-      // Check if it's a numerical question
       if (question.answer != null && question.answer!.isNotEmpty) {
         return AttemptedQuestion(
           questionId: question.id,
@@ -151,7 +216,6 @@ class QuestionsViewModel {
           attemptedOptionIndexes: null,
         );
       } else {
-        // MCQ question
         return AttemptedQuestion(
           questionId: question.id,
           correctAnswer: null,
@@ -165,17 +229,24 @@ class QuestionsViewModel {
     return AttemptedQuestions(paperId: paperId, questions: attemptedQuestions);
   }
 
-  // Prepare data for API submission (without correct answers and time tracking)
   PaperSubmission prepareApiSubmissionData(String paperId, List<Question> allQuestions) {
-    final responses = allQuestions.map((question) {
-      // Check if it's a numerical question
-      if (question.answer != null && question.answer!.isNotEmpty) {
-        return QuestionResponse(questionId: question.id, attemptedAnswer: numericalAnswers.value[question.id]);
-      } else {
-        // MCQ question
-        return QuestionResponse(questionId: question.id, attemptedOptionIndexes: selectedAnswers.value[question.id]);
-      }
-    }).toList();
+    final responses = allQuestions
+        .map((question) {
+          if (question.answer != null && question.answer!.isNotEmpty) {
+            final attemptedAnswer = numericalAnswers.value[question.id];
+            if (attemptedAnswer != null && attemptedAnswer.isNotEmpty) {
+              return QuestionResponse(questionId: question.id, attemptedAnswer: attemptedAnswer);
+            }
+          } else {
+            final attemptedOptions = selectedAnswers.value[question.id];
+            if (attemptedOptions != null && attemptedOptions.isNotEmpty) {
+              return QuestionResponse(questionId: question.id, attemptedOptionIndexes: attemptedOptions);
+            }
+          }
+          return null;
+        })
+        .whereType<QuestionResponse>()
+        .toList();
 
     return PaperSubmission(
       paperId: paperId,
@@ -185,10 +256,8 @@ class QuestionsViewModel {
     );
   }
 
-  // Prepare data for local result calculation (with correct answers)
   AttemptedQuestions prepareLocalResultData(String paperId, List<Question> allQuestions) {
     final attemptedQuestions = allQuestions.map((question) {
-      // Check if it's a numerical question
       if (question.answer != null && question.answer!.isNotEmpty) {
         return AttemptedQuestion(
           questionId: question.id,
@@ -198,7 +267,6 @@ class QuestionsViewModel {
           attemptedOptionIndexes: null,
         );
       } else {
-        // MCQ question
         return AttemptedQuestion(
           questionId: question.id,
           correctAnswer: null,
@@ -216,11 +284,17 @@ class QuestionsViewModel {
     try {
       questionsState.value = ViewModelState.loading(mode: QuestionStates.submissionLoading);
       final data = prepareApiSubmissionData(paperId, allQuestions);
-      log('API Submission Data: ${jsonEncode(data.toJson())}');
+
+      if (_debugMode) {
+        log('📤 DEBUG: API Submission Data: ${jsonEncode(data.toJson())}');
+      }
+
       await _papersRepository.submitPaper(data: data.toJson());
       questionsState.value = ViewModelState.success(data: 'Submitted', type: QuestionStates.submissionSuccess);
+
+      debugPrint('✅ Paper submitted successfully');
     } catch (e) {
-      debugPrint('Error submitting paper: $e');
+      debugPrint('❌ Error submitting paper: $e');
       questionsState.value = ViewModelState.error(
         error: 'Failed to submit paper: ${e.toString()}',
         type: QuestionStates.submissionError,
@@ -230,11 +304,13 @@ class QuestionsViewModel {
   }
 
   void dispose() {
+    _countdownTimer?.cancel();
     questionsState.dispose();
     currentQuestionIndex.dispose();
     selectedAnswers.dispose();
     numericalAnswers.dispose();
     markedForLater.dispose();
+    remainingSeconds.dispose();
 
     for (var controller in _subjectPageControllers.values) {
       controller.dispose();
@@ -244,5 +320,7 @@ class QuestionsViewModel {
     }
     _subjectPageControllers.clear();
     _subjectQuestionIndices.clear();
+
+    debugPrint('QuestionsViewModel disposed');
   }
 }

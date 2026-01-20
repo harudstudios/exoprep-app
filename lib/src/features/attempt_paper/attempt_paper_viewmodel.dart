@@ -22,79 +22,84 @@ class AttemptPaperViewModel {
        _papersRepository = papersRepository ?? PapersRepository(),
        _questionsRepository = questionsRepository ?? QuestionsRepository();
 
-  // State notifiers
-  final ValueNotifier<ViewModelState<String>> paperDetailsState = ValueNotifier(ViewModelState.idle());
-  final ValueNotifier<ViewModelState<String>> paperDataState = ValueNotifier(ViewModelState.idle());
+  final ValueNotifier<ViewModelState<String>> dataState = ValueNotifier(ViewModelState.idle());
 
-  // Data notifiers
   final ValueNotifier<PaperDetail?> paperDetails = ValueNotifier(null);
   final ValueNotifier<List<Subject>> subjectsData = ValueNotifier([]);
   final ValueNotifier<List<Question>> questionsData = ValueNotifier([]);
 
-  /// Fetch paper details only
-  Future<void> fetchPaperDetails(String paperID) async {
-    paperDetailsState.value = ViewModelState.loading(mode: AttemptPaperStates.fetchingData.toString());
+  /// Fetch all data concurrently (paper details, subjects, and questions)
+  Future<void> fetchAllData({required String examID, required String paperID}) async {
+    dataState.value = ViewModelState.loading(mode: AttemptPaperStates.fetchingData.toString());
 
     try {
-      AppLogs.info('Fetching paper details for paperID: $paperID');
+      AppLogs.info('Fetching all data concurrently for examID: $examID, paperID: $paperID');
 
-      final paperDetail = await _papersRepository.getPaperDetails(paperID: paperID);
-      paperDetails.value = paperDetail;
+      await Future.wait([_fetchPaperDetails(paperID), _fetchSubjects(examID), _fetchQuestions(paperID)], eagerError: false);
 
-      paperDetailsState.value = ViewModelState.success(data: paperDetail, type: AttemptPaperStates.dataFetched.toString());
+      if (questionsData.value.isEmpty) {
+        throw Exception('No questions available for this paper');
+      }
 
-      AppLogs.info('Paper Details fetched successfully: ${paperDetail.name}');
-    } catch (e) {
-      AppLogs.warning('Error fetching paper details: $e');
-      paperDetails.value = null;
-      paperDetailsState.value = ViewModelState.error(error: e.toString(), type: AttemptPaperStates.dataFetchError.toString());
-      rethrow;
-    }
-  }
-
-  /// Fetch all paper data (subjects and questions) concurrently
-  Future<void> fetchPaperData({required String examID, required String paperID}) async {
-    paperDataState.value = ViewModelState.loading(mode: AttemptPaperStates.fetchingData.toString());
-
-    try {
-      AppLogs.info('Fetching paper data for examID: $examID, paperID: $paperID');
-
-      // Execute all API calls in parallel using Future.wait
-      await Future.wait([_fetchSubjects(examID), _fetchQuestions(paperID)], eagerError: false);
-
-      paperDataState.value = ViewModelState.success(
-        data: {'subjects': subjectsData.value, 'questions': questionsData.value},
+      dataState.value = ViewModelState.success(
+        data: {'paperDetail': paperDetails.value, 'subjects': subjectsData.value, 'questions': questionsData.value},
         type: AttemptPaperStates.dataFetched.toString(),
       );
 
-      AppLogs.info('All paper data fetched successfully');
+      AppLogs.info(
+        'All data fetched successfully - '
+        'Paper: ${paperDetails.value?.name ?? "N/A"}, '
+        'Subjects: ${subjectsData.value.length}, '
+        'Questions: ${questionsData.value.length}',
+      );
     } catch (e) {
-      AppLogs.warning("Error fetching paper data: $e");
-      paperDataState.value = ViewModelState.error(error: e.toString(), type: AttemptPaperStates.dataFetchError.toString());
-    }
-  }
-
-  Future<void> _fetchSubjects(String examID) async {
-    try {
-      AppLogs.info('Fetching subjects for examID: $examID');
-      final query = 'page=1&pageSize=10&exam_id=$examID';
-      final fetchedSubjects = await _subjectsRepository.getSubjects(query: query);
-      subjectsData.value = fetchedSubjects;
-      AppLogs.info('Subjects fetched: ${fetchedSubjects.length}');
-    } catch (e) {
-      AppLogs.warning('Error fetching subjects: $e');
-      subjectsData.value = [];
+      AppLogs.warning('Error fetching all data: $e');
+      dataState.value = ViewModelState.error(error: e.toString(), type: AttemptPaperStates.dataFetchError.toString());
       rethrow;
     }
   }
 
-  Future<void> _fetchQuestions(String paperID) async {
+  /// Fetch paper details
+  Future<PaperDetail?> _fetchPaperDetails(String paperID) async {
+    try {
+      AppLogs.info('Fetching paper details for paperID: $paperID');
+      final paperDetail = await _papersRepository.getPaperDetails(paperID: paperID);
+      paperDetails.value = paperDetail;
+      AppLogs.info('Paper details fetched: ${paperDetail.name}');
+      return paperDetail;
+    } catch (e) {
+      AppLogs.warning('Error fetching paper details: $e');
+      paperDetails.value = null;
+      // Don't rethrow - allow other requests to complete
+      return null;
+    }
+  }
+
+  /// Fetch subjects
+  Future<List<Subject>> _fetchSubjects(String examID) async {
+    try {
+      AppLogs.info('Fetching subjects for examID: $examID');
+      final query = 'page=1&pageSize=50&exam_id=$examID';
+      final fetchedSubjects = await _subjectsRepository.getSubjects(query: query);
+      subjectsData.value = fetchedSubjects;
+      AppLogs.info('Subjects fetched: ${fetchedSubjects.length}');
+      return fetchedSubjects;
+    } catch (e) {
+      AppLogs.warning('Error fetching subjects: $e');
+      subjectsData.value = [];
+      return [];
+    }
+  }
+
+  /// Fetch questions
+  Future<List<Question>> _fetchQuestions(String paperID) async {
     try {
       AppLogs.info('Fetching questions for paperID: $paperID');
       final query = 'page=1&pageSize=500&paper_id=$paperID';
       final fetchedQuestions = await _questionsRepository.getQuestions(query: query);
       questionsData.value = fetchedQuestions;
       AppLogs.info('Questions fetched: ${fetchedQuestions.length}');
+      return fetchedQuestions;
     } catch (e) {
       AppLogs.warning('Error fetching questions: $e');
       questionsData.value = [];
@@ -102,14 +107,16 @@ class AttemptPaperViewModel {
     }
   }
 
-  /// Refresh paper data
-  Future<void> refreshPaperData({required String examID, required String paperID}) async {
-    await fetchPaperData(examID: examID, paperID: paperID);
+  Future<void> refreshData({required String examID, required String paperID}) async {
+    await fetchAllData(examID: examID, paperID: paperID);
   }
 
+  bool get hasData => questionsData.value.isNotEmpty && dataState.value.status == ViewModelStatus.success;
+
+  bool get hasPaperDetails => paperDetails.value != null;
+
   void dispose() {
-    paperDetailsState.dispose();
-    paperDataState.dispose();
+    dataState.dispose();
     paperDetails.dispose();
     subjectsData.dispose();
     questionsData.dispose();

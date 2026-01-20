@@ -14,7 +14,6 @@ import 'package:root/src/models/question_model/question_model.dart';
 import 'package:root/src/features/paper_result/paper_result_view.dart';
 import 'package:root/src/features/project_form/project_form_view.dart';
 import 'package:root/src/features/select_exams/select_exams_view.dart';
-import 'package:root/src/features/attempt_paper/instructions_view.dart';
 import 'package:root/src/features/attempt_paper/attempt_paper_view.dart';
 import 'package:root/src/features/authentication/authentication_view.dart';
 import 'package:root/src/features/exam_dashboard/exam_dashboard_view.dart';
@@ -98,19 +97,6 @@ final router = GoRouter(
     ),
 
     GoRoute(
-      path: AppRoute.instructions.path,
-      name: AppRoute.instructions.name,
-      pageBuilder: (context, state) {
-        final paper = state.extra as Paper;
-
-        return AppRouteTransition.slideFromBottom(
-          child: InstructionsView(paper: paper),
-          key: state.pageKey,
-        );
-      },
-    ),
-
-    GoRoute(
       path: AppRoute.attemptPaper.path,
       name: AppRoute.attemptPaper.name,
       pageBuilder: (context, state) {
@@ -128,6 +114,7 @@ final router = GoRouter(
       name: AppRoute.questions.name,
       pageBuilder: (context, state) {
         final params = state.extra as Map<String, dynamic>;
+
         final paper = params['paper'] as Paper;
         final subjects = params['subjects'] as List<Subject>;
         final questions = params['questions'] as List<Question>;
