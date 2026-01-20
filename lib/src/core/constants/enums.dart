@@ -17,3 +17,13 @@ enum TimeGoalFrequency { onetime, recurring }
 enum TimeGoalRepeatingFrequency { daily, weekly, monthly }
 
 enum AttemptPaperStates { fetchingData, dataFetched, dataFetchError }
+
+enum QuestionStates {
+  idle,
+  dataLoading,
+  dataLoadedSuccess,
+  dataLoadingError,
+  submissionLoading,
+  submissionSuccess,
+  submissionError,
+}

@@ -2,9 +2,9 @@ enum ViewModelStatus { idle, loading, success, error }
 
 class ViewModelState<T> {
   final ViewModelStatus status;
+  final String? error;
   final dynamic data;
   final T? type;
-  final String? error;
 
   const ViewModelState({required this.status, this.data, this.error, this.type});
 

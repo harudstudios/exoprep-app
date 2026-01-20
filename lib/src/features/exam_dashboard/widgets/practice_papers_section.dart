@@ -264,7 +264,7 @@ class _PaperOptionsDialog extends StatelessWidget {
                     label: 'Attempt Paper',
                     onTap: () {
                       Navigator.pop(context);
-                      context.push(AppRoute.instructions.path, extra: paper);
+                      context.push(AppRoute.attemptPaper.path, extra: paper);
                     },
                     isPrimary: true,
                   ),

@@ -1,21 +1,153 @@
 part of '../questions_view.dart';
 
-class _NavigationButtons extends StatelessWidget {
+class _NavigationButtons extends StatefulWidget {
   const _NavigationButtons({
-    required this.viewModel,
-    required this.currentIndex,
-    required this.totalQuestions,
+    required this.totalQuestionsInSubject,
     required this.currentQuestion,
+    required this.currentIndex,
+    required this.allQuestions,
+    required this.viewModel,
+    required this.subjects,
+    required this.subject,
+    required this.paper,
   });
 
-  final QuestionsViewModel viewModel;
+  final Subject subject;
   final int currentIndex;
-  final int totalQuestions;
+  final List<Subject> subjects;
+  final int totalQuestionsInSubject;
+  final QuestionsViewModel viewModel;
+  final List<Question> allQuestions;
   final Question currentQuestion;
+  final Paper paper;
+
+  @override
+  State<_NavigationButtons> createState() => _NavigationButtonsState();
+}
+
+class _NavigationButtonsState extends State<_NavigationButtons> {
+  bool _isSubmitting = false;
+
+  bool get _isLastQuestionInSubject => widget.currentIndex >= widget.totalQuestionsInSubject - 1;
+
+  bool get _isLastSubject {
+    final currentSubjectIndex = widget.subjects.indexWhere((s) => s.id == widget.subject.id);
+    return currentSubjectIndex == widget.subjects.length - 1;
+  }
+
+  void _goToNextSection(BuildContext context) {
+    final currentSubjectIndex = widget.subjects.indexWhere((s) => s.id == widget.subject.id);
+    if (currentSubjectIndex < widget.subjects.length - 1) {
+      DefaultTabController.of(context).animateTo(currentSubjectIndex + 1);
+      final nextSubject = widget.subjects[currentSubjectIndex + 1];
+      widget.viewModel.jumpToQuestionInSubject(nextSubject.id, 0);
+    }
+  }
+
+  Future<void> _handleFinish(BuildContext context) async {
+    if (_isSubmitting) return;
+
+    final totalQuestionsCount = widget.allQuestions.length;
+    final attemptedCount = widget.viewModel.attemptedCount;
+    final unattemptedCount = totalQuestionsCount - attemptedCount;
+
+    final bool? shouldSubmit = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return FinishPaperDialog(
+          totalQuestions: totalQuestionsCount,
+          attemptedCount: attemptedCount,
+          unattemptedCount: unattemptedCount,
+        );
+      },
+    );
+
+    if (shouldSubmit != true || !mounted) return;
+
+    setState(() => _isSubmitting = true);
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return const _SubmittingDialog();
+      },
+    );
+
+    try {
+      final attemptedQuestions = widget.viewModel.prepareSubmissionData(widget.paper.id, widget.allQuestions);
+      await widget.viewModel.submitPaper(widget.paper.id, widget.allQuestions);
+      if (!mounted) return;
+      final state = widget.viewModel.questionsState.value;
+      Navigator.of(context).pop();
+      if (state.status == ViewModelStatus.success && state.type == QuestionStates.submissionSuccess) {
+        await Future.delayed(const Duration(milliseconds: 500));
+        if (mounted) {
+          context.pushReplacement(
+            AppRoute.paperResult.path,
+            extra: {
+              'paper': widget.paper,
+              'subjects': widget.subjects,
+              'questions': widget.allQuestions,
+              'attempted_questions': attemptedQuestions,
+            },
+          );
+        }
+      } else if (state.status == ViewModelStatus.error && state.type == QuestionStates.submissionError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to submit paper'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 10),
+            action: SnackBarAction(label: 'Retry', textColor: Colors.white, onPressed: () => _handleFinish(context)),
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 3),
+          action: SnackBarAction(label: 'Retry', textColor: Colors.white, onPressed: () => _handleFinish(context)),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isSubmitting = false);
+      }
+    }
+  }
+
+  String get _buttonLabel {
+    if (_isLastQuestionInSubject) {
+      return _isLastSubject ? 'Finish' : 'Next Section';
+    }
+    return 'Next';
+  }
+
+  IconData get _buttonIcon {
+    if (_isLastQuestionInSubject && _isLastSubject) return Icons.check;
+    return Icons.arrow_forward;
+  }
+
+  VoidCallback? _getButtonAction(BuildContext context) {
+    if (_isSubmitting) return null;
+
+    if (_isLastQuestionInSubject) {
+      return _isLastSubject ? () => _handleFinish(context) : () => _goToNextSection(context);
+    }
+    return () => widget.viewModel.nextQuestion(widget.subject.id);
+  }
 
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDarkMode;
+    final colorScheme = context.colorScheme;
+    final isFirstQuestion = widget.currentIndex == 0;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -27,140 +159,96 @@ class _NavigationButtons extends StatelessWidget {
         top: false,
         child: Row(
           children: [
-            if (currentIndex > 0) ...[
+            if (!isFirstQuestion) ...[
               Expanded(
-                child: _NavButton(
-                  label: 'Previous',
-                  icon: Icons.arrow_back,
-                  onPressed: () => viewModel.previousQuestion(),
-                  isPrimary: false,
+                child: OutlinedButton.icon(
+                  onPressed: _isSubmitting ? null : () => widget.viewModel.previousQuestion(widget.subject.id),
+                  icon: const Icon(Icons.arrow_back, size: 18),
+                  label: const Text('Previous'),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    side: BorderSide(color: isDark ? const Color(0xFF2A2A2A) : const Color(0xFFE5E7EB)),
+                  ),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 12),
             ],
-            Expanded(
-              child: _NavButton(
-                label: 'Later',
-                icon: Icons.flag_outlined,
-                onPressed: () => viewModel.markForLater(currentQuestion.id),
-                isPrimary: false,
-                isOutlined: true,
-              ),
+            ValueListenableBuilder<Set<String>>(
+              valueListenable: widget.viewModel.markedForLater,
+              builder: (context, markedForLater, _) {
+                final isMarked = markedForLater.contains(widget.currentQuestion.id);
+                return OutlinedButton(
+                  onPressed: _isSubmitting ? null : () => widget.viewModel.markForLater(widget.currentQuestion.id),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    backgroundColor: isMarked
+                        ? (isDark
+                              ? const Color(0xFFFBBF24).withValues(alpha: 0.2)
+                              : const Color(0xFFFBBF24).withValues(alpha: 0.1))
+                        : null,
+                    side: BorderSide(
+                      color: isMarked ? const Color(0xFFFBBF24) : (isDark ? const Color(0xFF2A2A2A) : const Color(0xFFE5E7EB)),
+                    ),
+                  ),
+                  child: Icon(
+                    isMarked ? Icons.bookmark : Icons.bookmark_border,
+                    size: 20,
+                    color: isMarked ? const Color(0xFFFBBF24) : (isDark ? const Color(0xFFE5E5E5) : const Color(0xFF1F2937)),
+                  ),
+                );
+              },
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 12),
             Expanded(
-              child: _NavButton(
-                label: currentIndex < totalQuestions - 1 ? 'Next' : 'Finish',
-                icon: currentIndex < totalQuestions - 1 ? Icons.arrow_forward : Icons.check,
-                onPressed: () {
-                  if (currentIndex < totalQuestions - 1) {
-                    viewModel.nextQuestion();
-                  } else {
-                    _showFinishDialog(context);
-                  }
-                },
-                isPrimary: true,
-                iconAtEnd: true,
+              child: FilledButton.icon(
+                onPressed: _getButtonAction(context),
+                icon: Icon(_buttonIcon, size: 18),
+                label: Text(_buttonLabel),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  backgroundColor: colorScheme.primary,
+                ),
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  void _showFinishDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Finish Quiz'),
-        content: const Text('Are you sure you want to finish this quiz?'),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-          FilledButton(
-            onPressed: () {
-              Navigator.pop(context);
-              viewModel.finishQuiz();
-            },
-            child: const Text('Finish'),
-          ),
-        ],
       ),
     );
   }
 }
 
-class _NavButton extends StatelessWidget {
-  const _NavButton({
-    required this.label,
-    required this.icon,
-    required this.onPressed,
-    required this.isPrimary,
-    this.isOutlined = false,
-    this.iconAtEnd = false,
-  });
-
-  final String label;
-  final IconData icon;
-  final VoidCallback onPressed;
-  final bool isPrimary;
-  final bool isOutlined;
-  final bool iconAtEnd;
+class _SubmittingDialog extends StatelessWidget {
+  const _SubmittingDialog();
 
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDarkMode;
 
-    if (isPrimary) {
-      return FilledButton(
-        onPressed: onPressed,
-        style: FilledButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        ),
-        child: Row(
+    return PopScope(
+      canPop: false,
+      child: AlertDialog(
+        backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (!iconAtEnd) ...[Icon(icon, size: 18), const SizedBox(width: 6)],
-            Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
-            if (iconAtEnd) ...[const SizedBox(width: 6), Icon(icon, size: 18)],
+            CircularProgressIndicator(color: context.colorScheme.primary),
+            const SizedBox(height: 20),
+            Text(
+              'Submitting your test...',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: isDark ? const Color(0xFFE5E5E5) : const Color(0xFF1F2937),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Please wait',
+              style: TextStyle(fontSize: 14, color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280)),
+            ),
           ],
         ),
-      );
-    }
-
-    if (isOutlined) {
-      return OutlinedButton(
-        onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          side: BorderSide(color: isDark ? const Color(0xFF2A2A2A) : const Color(0xFFE5E7EB)),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 18),
-            const SizedBox(width: 6),
-            Flexible(child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis)),
-          ],
-        ),
-      );
-    }
-
-    return TextButton(
-      onPressed: onPressed,
-      style: TextButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 18),
-          const SizedBox(width: 6),
-          Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
-        ],
       ),
     );
   }

@@ -1,32 +1,30 @@
 part of 'attempt_paper_view.dart';
 
 mixin AttemptPaperMixin on State<AttemptPaperView> {
-  late AttemptPaperViewModel _viewModel;
-
-  AttemptPaperViewModel get viewModel => _viewModel;
+  late AttemptPaperViewModel viewModel;
 
   @override
   void initState() {
     super.initState();
-    _viewModel = AttemptPaperViewModel();
-
-    // Fetch data after the first frame is rendered
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _fetchPaperData();
-    });
+    viewModel = AttemptPaperViewModel();
+    _loadData();
   }
 
-  Future<void> _fetchPaperData() async {
-    await _viewModel.fetchPaperData(examID: widget.paper.exam.id, paperID: widget.paper.id);
+  Future<void> _loadData() async {
+    try {
+      await viewModel.fetchAllData(examID: widget.paper.exam.id, paperID: widget.paper.id);
+    } catch (e) {
+      AppLogs.warning('Failed to load paper data: $e');
+    }
   }
 
   Future<void> onRefresh() async {
-    await _viewModel.refreshPaperData(examID: widget.paper.exam.id, paperID: widget.paper.id);
+    await viewModel.refreshData(examID: widget.paper.exam.id, paperID: widget.paper.id);
   }
 
   @override
   void dispose() {
-    _viewModel.dispose();
+    viewModel.dispose();
     super.dispose();
   }
 }
