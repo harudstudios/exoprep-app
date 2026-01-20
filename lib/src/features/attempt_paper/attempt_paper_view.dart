@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:root/src/core/theme/colors.dart';
+import 'package:root/src/core/logger/logger.dart';
 import 'package:root/src/core/navigation/routes.dart';
 import 'package:root/src/models/paper_model/paper_model.dart';
 import 'package:root/src/core/extensions/context_extension.dart';
 import 'package:root/src/core/common/state/viewmodel_state.dart';
 import 'package:root/src/models/subject_model/subject_model.dart';
 import 'package:root/src/models/question_model/question_model.dart';
+import 'package:root/src/models/paper_model/paper_details_model.dart';
 import 'package:root/src/features/attempt_paper/attempt_paper_viewmodel.dart';
 
 part 'attempt_paper_mixin.dart';
@@ -25,24 +26,28 @@ class _AttemptPaperViewState extends State<AttemptPaperView> with AttemptPaperMi
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.paper.name), centerTitle: true),
       body: ValueListenableBuilder<ViewModelState<String>>(
-        valueListenable: viewModel.paperDataState,
+        valueListenable: viewModel.dataState,
         builder: (context, state, child) {
           if (state.status == ViewModelStatus.loading) {
             return const _LoadingView();
           }
 
           if (state.status == ViewModelStatus.error) {
-            return _ErrorView(message: state.error ?? 'Failed to load paper data', onRetry: onRefresh);
+            return _ErrorView(message: 'Failed to load test data', onRetry: onRefresh);
           }
 
           if (state.status == ViewModelStatus.success) {
-            return _LoadedView(
-              paper: widget.paper,
-              subjects: viewModel.subjectsData.value,
-              questions: viewModel.questionsData.value,
-              onContinue: () {},
+            return ValueListenableBuilder<PaperDetail?>(
+              valueListenable: viewModel.paperDetails,
+              builder: (context, paperDetail, _) {
+                return _LoadedView(
+                  paper: widget.paper,
+                  paperDetail: paperDetail,
+                  subjects: viewModel.subjectsData.value,
+                  questions: viewModel.questionsData.value,
+                );
+              },
             );
           }
 
@@ -58,14 +63,22 @@ class _LoadingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(),
-          SizedBox(height: 16),
-          Text('Loading paper data...', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-        ],
+    final isDark = context.isDarkMode;
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Test Overview'), centerTitle: true),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(color: AppColors.primaryColor),
+            const SizedBox(height: 16),
+            Text(
+              'Loading test overview...',
+              style: TextStyle(fontSize: 14, color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280)),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -79,27 +92,45 @@ class _ErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.error_outline, size: 64, color: Colors.red.shade400),
-            const SizedBox(height: 16),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, color: Colors.red.shade400),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: onRetry,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Retry'),
-              style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16)),
-            ),
-          ],
+    final isDark = context.isDarkMode;
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Test Overview'), centerTitle: true),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.error_outline, size: 64, color: Colors.red.withValues(alpha: 0.7)),
+              const SizedBox(height: 16),
+              Text(
+                'Failed to load test',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: isDark ? Colors.white : const Color(0xFF1F2937),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14, color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280)),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                onPressed: onRetry,
+                icon: const Icon(Icons.refresh),
+                label: const Text('Retry'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -108,80 +139,336 @@ class _ErrorView extends StatelessWidget {
 
 class _LoadedView extends StatelessWidget {
   final Paper paper;
+  final PaperDetail? paperDetail;
   final List<Subject> subjects;
   final List<Question> questions;
-  final VoidCallback onContinue;
 
-  const _LoadedView({required this.paper, required this.subjects, required this.questions, required this.onContinue});
+  const _LoadedView({required this.paper, required this.paperDetail, required this.subjects, required this.questions});
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _InfoCard(icon: CupertinoIcons.book_solid, label: 'Paper', value: paper.name),
-            const SizedBox(height: 12),
-            _InfoCard(icon: CupertinoIcons.question_circle, label: 'Total Questions', value: '${questions.length} questions'),
-            const SizedBox(height: 12),
-            _InfoCard(icon: CupertinoIcons.collections, label: 'Subjects', value: '${subjects.length} subjects'),
-            const SizedBox(height: 64),
-            GestureDetector(
+    final isDark = context.isDarkMode;
+
+    return Scaffold(
+      body: Stack(
+        children: [
+          CustomScrollView(
+            slivers: [
+              // Sliver App Bar with Paper Name
+              SliverAppBar(
+                backgroundColor: Colors.transparent,
+                expandedHeight: 120,
+                floating: false,
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  title: Text(
+                    'Test Overview',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? Colors.white : const Color(0xFF1F2937),
+                    ),
+                  ),
+                  centerTitle: true,
+                  titlePadding: const EdgeInsets.only(bottom: 16),
+                ),
+              ),
+
+              // Content
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Warning if detail fetch failed
+                      if (paperDetail == null)
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 16),
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(Icons.info_outline, color: Colors.orange, size: 20),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  'Detailed marking information unavailable',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: isDark ? const Color(0xFFE5E5E5) : const Color(0xFF1F2937),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                      // Header Card
+                      Container(
+                        padding: const EdgeInsets.only(left: 20, right: 30, top: 18, bottom: 24),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              AppColors.primaryColor.withValues(alpha: 0.1),
+                              AppColors.primaryColor.withValues(alpha: 0.05),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppColors.primaryColor.withValues(alpha: 0.3), width: 1.5),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              paperDetail?.name ?? paper.name,
+                              style: context.titleLarge!.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: isDark ? Colors.white : const Color(0xFF1F2937),
+                              ),
+                            ),
+                            if ((paperDetail?.description ?? paper.description).isNotEmpty) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                paperDetail?.description ?? paper.description,
+                                style: TextStyle(fontSize: 14, color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280)),
+                              ),
+                            ],
+                            const SizedBox(height: 16),
+                            _TestDetailRow(
+                              icon: Icons.article_outlined,
+                              label: 'Total Questions',
+                              value: (paperDetail?.totalQuestions ?? questions.length).toString(),
+                            ),
+                            const SizedBox(height: 8),
+                            _TestDetailRow(
+                              icon: Icons.timer_outlined,
+                              label: 'Duration',
+                              value: '${paperDetail?.duration ?? paper.durationInMinutes} minutes',
+                            ),
+                            if (subjects.isNotEmpty) ...[
+                              const SizedBox(height: 8),
+                              _TestDetailRow(icon: Icons.book_outlined, label: 'Subjects', value: subjects.length.toString()),
+                            ],
+                            if (paperDetail != null) ...[
+                              const SizedBox(height: 8),
+                              _TestDetailRow(
+                                icon: Icons.add_circle_outline,
+                                label: 'Marks per Correct',
+                                value: '+${paperDetail!.positiveMarks}',
+                              ),
+                              const SizedBox(height: 8),
+                              _TestDetailRow(
+                                icon: Icons.remove_circle_outline,
+                                label: 'Negative Marks',
+                                value: '-${paperDetail!.negativeMarks}',
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // General Instructions
+                      Text(
+                        'General Instructions',
+                        style: context.titleMedium!.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? Colors.white : const Color(0xFF1F2937),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      _InstructionCard(
+                        icon: Icons.laptop_chromebook,
+                        title: 'Technical Requirements',
+                        instructions: ['Ensure stable internet connection', 'Close unnecessary apps', 'Keep device charged'],
+                      ),
+                      const SizedBox(height: 12),
+
+                      _InstructionCard(
+                        icon: Icons.rule_outlined,
+                        title: 'Test Rules',
+                        instructions: [
+                          'Navigate between questions freely',
+                          'Mark questions for review later',
+                          'Submit before time runs out',
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+
+                      if (paperDetail != null) ...[
+                        _InstructionCard(
+                          icon: Icons.grade_outlined,
+                          title: 'Marking Scheme',
+                          instructions: [
+                            'Correct: +${paperDetail!.positiveMarks} marks',
+                            'Incorrect: -${paperDetail!.negativeMarks} mark',
+                            'Unattempted: No penalty',
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+
+                      _InstructionCard(
+                        icon: Icons.tips_and_updates_outlined,
+                        title: 'Important Tips',
+                        instructions: ['Read questions carefully', 'Manage time wisely', 'Review marked questions'],
+                      ),
+
+                      const SizedBox(height: 100),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          // Floating Button
+          Positioned(
+            left: 16,
+            right: 16,
+            bottom: 16,
+            child: GestureDetector(
               onTap: () => context.pushReplacement(
                 AppRoute.questions.path,
                 extra: {'paper': paper, 'subjects': subjects, 'questions': questions},
               ),
               child: Container(
                 height: 56,
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                decoration: BoxDecoration(color: AppColors.primaryColor, borderRadius: BorderRadius.circular(30)),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryColor,
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(color: AppColors.primaryColor.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4)),
+                  ],
+                ),
                 child: Center(
-                  child: Text(
-                    "Continue",
-                    style: context.titleMedium!.copyWith(color: Colors.white, fontWeight: FontWeight.w600),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Start Test',
+                        style: context.titleMedium!.copyWith(color: Colors.white, fontWeight: FontWeight.w600),
+                      ),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.arrow_forward, color: Colors.white, size: 20),
+                    ],
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _InfoCard extends StatelessWidget {
+class _TestDetailRow extends StatelessWidget {
+  const _TestDetailRow({required this.icon, required this.label, required this.value});
+
   final IconData icon;
   final String label;
   final String value;
 
-  const _InfoCard({required this.icon, required this.label, required this.value});
+  @override
+  Widget build(BuildContext context) {
+    final isDark = context.isDarkMode;
+
+    return Row(
+      children: [
+        Icon(icon, size: 20, color: AppColors.primaryColor),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(label, style: TextStyle(fontSize: 14, color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280))),
+        ),
+        Text(
+          value,
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: isDark ? Colors.white : const Color(0xFF1F2937)),
+        ),
+      ],
+    );
+  }
+}
+
+class _InstructionCard extends StatelessWidget {
+  const _InstructionCard({required this.icon, required this.title, required this.instructions});
+
+  final IconData icon;
+  final String title;
+  final List<String> instructions;
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.isDarkMode;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark ? Colors.grey.shade900 : Colors.grey.shade100,
+        color: isDark ? const Color(0xFF1A1A1A) : Colors.white,
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: isDark ? const Color(0xFF2A2A2A) : const Color(0xFFE5E7EB)),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 24, color: Theme.of(context).primaryColor),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(label, style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
-                const SizedBox(height: 4),
-                Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-              ],
-            ),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(icon, size: 20, color: AppColors.primaryColor),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white : const Color(0xFF1F2937),
+                ),
+              ),
+            ],
           ),
+          const SizedBox(height: 12),
+          ...instructions.map((instruction) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 6),
+                    width: 6,
+                    height: 6,
+                    decoration: BoxDecoration(color: AppColors.primaryColor, shape: BoxShape.circle),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      instruction,
+                      style: TextStyle(
+                        fontSize: 14,
+                        height: 1.5,
+                        color: isDark ? const Color(0xFFD1D5DB) : const Color(0xFF4B5563),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
         ],
       ),
     );

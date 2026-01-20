@@ -24,7 +24,6 @@ enum AppRoute {
 
   /* Paper */
   readPaper('/readPaper'),
-  instructions('/instructions'),
   attemptPaper('/attemptPaper'),
   questions('/questions'),
   paperResult('/paperResult'),
