@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:root/src/core/extensions/context_extension.dart';
+import 'package:root/src/features/leaderboard/views/widgets/loader.dart';
+import 'package:root/src/features/leaderboard/views/widgets/podium.dart';
 import 'package:root/src/core/common/ui/widgets/background_gradient.dart';
 import 'package:root/src/features/leaderboard/cubit/leaderboard_cubit.dart';
 import 'package:root/src/features/leaderboard/views/widgets/empty_widget.dart';
 import 'package:root/src/features/leaderboard/views/widgets/exam_selector.dart';
 import 'package:root/src/features/leaderboard/views/widgets/leaderboard_list.dart';
-import 'package:root/src/features/leaderboard/views/widgets/loader.dart';
-import 'package:root/src/features/leaderboard/views/widgets/podium.dart';
 import 'package:root/src/features/leaderboard/views/widgets/try_again_widget.dart';
 
 class LeaderboardView extends StatefulWidget {
