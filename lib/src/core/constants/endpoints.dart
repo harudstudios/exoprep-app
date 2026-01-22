@@ -12,7 +12,9 @@ class AppEndpoints {
   /*----------------- Select Exams Endpoints -------------------*/
   static String get getExams => '$baseURL/api/v1/exams';
 
+  static String getLeafExams({String? query}) => '$baseURL/api/v1/exams/leaf?search=${query ?? ""}';
   /*----------------- Papers Endpoints -------------------*/
+
   static String getPapers(String query) => '$baseURL/api/v1/papers?$query';
 
   static String getPaperDetails(String paperID) => '$baseURL/api/v1/papers/$paperID';
@@ -26,4 +28,11 @@ class AppEndpoints {
   static String getQuestions(String query) => '$baseURL/api/v1/questions?$query';
 
   static String get submitPaper => '$baseURL/api/v1/quiz/submit';
+
+  /*----------------- Leaderboard Endpoints -------------------*/
+  static String getStreakLeaderBoardByExam(String examID) =>
+      '$baseURL/api/v1/leaderboard/exam/$examID/streak?limit=10&include_user_stats=true';
+
+  static String getScoreLeaderBoardByExam(String examID) =>
+      '$baseURL/api/v1/leaderboard/exam/$examID/points?limit=10&include_user_stats=true';
 }
