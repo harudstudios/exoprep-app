@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:root/src/core/extensions/context_extension.dart';
 
@@ -47,8 +48,13 @@ class _ProfileViewState extends State<ProfileView> {
                   _SectionHeader(title: "Legal"),
                   const ProfileTile(icon: Icons.description_outlined, title: "Terms & Conditions"),
                   const ProfileTile(icon: Icons.privacy_tip_outlined, title: "Privacy Policy"),
-                  const ProfileTile(icon: Icons.info_outline, title: "About Us", isLast: true),
-
+                  const ProfileTile(icon: Icons.info_outline, title: "About Us"),
+                  GestureDetector(
+                    onTap: () {
+                      FirebaseAuth.instance.signOut();
+                    },
+                    child: const ProfileTile(icon: Icons.exit_to_app, title: "Log out", isLast: true),
+                  ),
                   const SizedBox(height: 40), // Space for Bottom Nav
                 ],
               ),
