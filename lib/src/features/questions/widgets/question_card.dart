@@ -1,5 +1,3 @@
-// ignore_for_file: unused_element
-
 part of '../questions_view.dart';
 
 class _QuestionCard extends StatelessWidget {
@@ -174,48 +172,6 @@ class _MultipleChoiceIndicator extends StatelessWidget {
           Text(
             'Multiple Choice - Select all that apply',
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: infoColor),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _AnswerExplanation extends StatelessWidget {
-  const _AnswerExplanation({required this.answer});
-
-  final String answer;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = context.isDarkMode;
-    final infoColor = isDark ? const Color(0xFF60A5FA) : const Color(0xFF3B82F6);
-    final infoSubtleColor = infoColor.withValues(alpha: isDark ? 0.12 : 0.08);
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: infoSubtleColor,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: infoColor.withValues(alpha: 0.3), width: 1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.lightbulb_outline, size: 20, color: infoColor),
-              const SizedBox(width: 8),
-              Text(
-                'Explanation',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: infoColor),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            answer,
-            style: TextStyle(fontSize: 14, height: 1.5, color: isDark ? const Color(0xFFE5E5E5) : const Color(0xFF1F2937)),
           ),
         ],
       ),
