@@ -1,10 +1,9 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:root/src/core/navigation/routes.dart';
 import 'package:root/src/core/navigation/router.dart';
 import 'package:root/src/core/extensions/context_extension.dart';
+import 'package:root/src/core/common/ui/widgets/theme_toggle_switch.dart';
 import 'package:root/src/core/common/ui/widgets/background_gradient.dart';
 import 'package:root/src/features/profile/view/widgets/profile_tile.dart';
 import 'package:root/src/features/profile/view/widgets/profile_headers.dart';
@@ -17,6 +16,7 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
+  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,14 +49,7 @@ class _ProfileViewState extends State<ProfileView> {
                       icon: Icons.palette_outlined,
                       title: "Theme Mode",
                       subtitle: "Switch Light/Dark mode",
-                      ontap: () {
-                        log('here');
-                        if (AdaptiveTheme.of(context).mode.isDark) {
-                          AdaptiveTheme.of(context).setLight();
-                        } else {
-                          AdaptiveTheme.of(context).setDark();
-                        }
-                      },
+                      trailing: ThemeToggleSwitch(),
                     ),
                     const ProfileTile(
                       icon: Icons.help_outline,

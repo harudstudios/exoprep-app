@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:root/src/core/extensions/context_extension.dart';
 
 class ProfileTile extends StatelessWidget {
   final IconData icon;
@@ -6,11 +7,21 @@ class ProfileTile extends StatelessWidget {
   final String? subtitle;
   final bool isLast;
   final void Function()? ontap;
-  const ProfileTile({super.key, required this.icon, required this.title, this.subtitle, this.isLast = false, this.ontap});
+  final Widget? trailing;
+
+  const ProfileTile({
+    super.key,
+    required this.icon,
+    this.trailing,
+    required this.title,
+    this.subtitle,
+    this.isLast = false,
+    this.ontap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final bool isDark = context.isDarkMode;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -31,7 +42,7 @@ class ProfileTile extends StatelessWidget {
           style: TextStyle(color: isDark ? Colors.white : Colors.black, fontSize: 15, fontWeight: FontWeight.w500),
         ),
         subtitle: subtitle != null ? Text(subtitle!, style: const TextStyle(fontSize: 12, color: Colors.grey)) : null,
-        trailing: const Icon(Icons.chevron_right, color: Colors.grey, size: 20),
+        trailing: trailing ?? const Icon(Icons.chevron_right, color: Colors.grey, size: 20),
         onTap: ontap,
       ),
     );

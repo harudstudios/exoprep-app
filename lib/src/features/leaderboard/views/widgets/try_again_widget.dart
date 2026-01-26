@@ -31,7 +31,7 @@ class TryAgainWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: cardColor,
             borderRadius: BorderRadius.circular(24), // High rounding like X
-            border: Border.all(color: isDark ? Colors.white12 : Colors.black.withOpacity(0.05)),
+            border: Border.all(color: isDark ? Colors.white12 : Colors.black.withValues(alpha: 0.05)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -42,7 +42,7 @@ class TryAgainWidget extends StatelessWidget {
                   // Error Icon with Red Glow
                   Container(
                     padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(color: Colors.red.withOpacity(0.1), shape: BoxShape.circle),
+                    decoration: BoxDecoration(color: Colors.red.withValues(alpha: 0.1), shape: BoxShape.circle),
                     child: const Icon(
                       Icons.error_outline_rounded,
                       color: Color(0xFFF4212E), // Twitter/X Error Red

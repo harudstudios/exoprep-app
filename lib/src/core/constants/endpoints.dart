@@ -12,6 +12,8 @@ class AppEndpoints {
   /*----------------- Select Exams Endpoints -------------------*/
   static String get getExams => '$baseURL/api/v1/exams';
 
+  static String get getUserExams => "$baseURL/api/v1/users/get-user-exams";
+
   static String getLeafExams({String? query}) => '$baseURL/api/v1/exams/leaf?search=${query ?? ""}';
   /*----------------- Papers Endpoints -------------------*/
 
@@ -19,7 +21,9 @@ class AppEndpoints {
 
   static String getPaperDetails(String paperID) => '$baseURL/api/v1/papers/$paperID';
 
-  static String recentAttempts(String query) => '$baseURL/api/v1/quiz/attempts?$query';
+  static String getRecentAttempts(String query) => '$baseURL/api/v1/quiz/attempts?$query';
+
+  static String getRecentlyAttemptedPaper(String attemptedPaperId) => '$baseURL/api/v1/quiz/attempts/$attemptedPaperId';
 
   /*----------------- Subjects Endpoints -------------------*/
   static String getSubjects(String query) => '$baseURL/api/v1/subjects?$query';
