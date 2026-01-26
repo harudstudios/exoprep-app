@@ -273,9 +273,10 @@ class _StreakContentWidgetState extends State<_StreakContentWidget> with SingleT
 
                             Row(
                               children: [
-                                _CompactStat(label: 'Total', value: totalAttempts.toString(), isDark: isDark),
+                                _CompactStat(label: 'Total \nAttempts', value: totalAttempts.toString(),),
                                 const SizedBox(width: 12),
-                                _CompactStat(label: 'Active', value: activeDays.toString(), isDark: isDark),
+                                _CompactStat(label: 'Days \nActive', value: activeDays.toString(),),
+                                // const SizedBox(width: 24),
                               ],
                             ),
                           ],
@@ -354,34 +355,40 @@ class _StreakContentWidgetState extends State<_StreakContentWidget> with SingleT
 class _CompactStat extends StatelessWidget {
   final String label;
   final String value;
-  final bool isDark;
 
-  const _CompactStat({required this.label, required this.value, required this.isDark});
+  const _CompactStat({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            color: isDark ? Colors.white : Colors.grey.shade900,
-            height: 1,
+    final isDark = context.isDarkMode;
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: isDark ? Colors.grey.shade800: Colors.grey.shade200),
+      ),
+      child: Row(
+        children: [
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+              color: isDark ? Colors.white : Colors.grey.shade900,
+            ),
           ),
-        ),
-        const SizedBox(width: 3),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 10,
-            fontWeight: FontWeight.w500,
-            color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 9,
+              height: 0,
+              fontWeight: FontWeight.w500,
+              color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
