@@ -84,7 +84,7 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
                       scrollDirection: Axis.horizontal,
                       itemCount: _homeViewmodel.userExams.value.length + 1,
                       itemBuilder: (context, index) {
-                        final screenWidth = MediaQuery.of(context).size.width;
+                        final screenWidth = context.screenWidth;
                         final cardWidth = screenWidth * 0.9;
 
                         if (_homeViewmodel.userExams.value.isEmpty) {

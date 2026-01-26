@@ -9,7 +9,6 @@ import 'package:root/src/core/navigation/routes.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
-
 part 'widgets/practice_papers_section.dart';
 part 'widgets/exam_dashboard_header.dart';
 part 'widgets/continue_section.dart';
@@ -18,7 +17,7 @@ part 'widgets/streak_section.dart';
 part 'exam_dashboard_mixin.dart';
 
 class ExamDashboardView extends StatefulWidget {
-  const ExamDashboardView({this.examID = 'cmjrion9f0000s0z704q22aqf', super.key});
+  const ExamDashboardView({required this.examID, super.key});
 
   final String examID;
 
