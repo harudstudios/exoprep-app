@@ -106,6 +106,7 @@ class _StreakContentWidgetState extends State<_StreakContentWidget> with SingleT
           Material(
             color: Colors.transparent,
             child: InkWell(
+              splashFactory: NoSplash.splashFactory,
               onTap: hasData ? _toggleExpansion : null,
               borderRadius: BorderRadius.circular(16),
               child: Padding(
