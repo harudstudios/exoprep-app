@@ -2,7 +2,7 @@ class AppEndpoints {
   AppEndpoints._();
 
   // static const String baseURL = 'http://3.109.221.178:5432';
-  static const String baseURL = 'http://localhost:4000';
+  static const String baseURL = 'https://exoprep-server.harudh.in';
 
   /*----------------- Auth Endpoints -------------------*/
   static String get user => '$baseURL/api/v1/users';
