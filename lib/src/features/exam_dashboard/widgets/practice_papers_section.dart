@@ -101,9 +101,12 @@ class _PYQTab extends StatelessWidget {
         }
 
         if (state.status == ViewModelStatus.error) {
-          return _PapersErrorWidget(
-            message: 'We couldn\'t load the PYQ papers.',
-            onRetry: () => viewModel.refreshPYQPapers(viewModel.examID),
+          // Wrapped in SingleChildScrollView so the error widget allows pulling/scrolling
+          return SingleChildScrollView(
+            child: _PapersErrorWidget(
+              message: 'We couldn\'t load the PYQ papers.',
+              onRetry: () => viewModel.refreshPYQPapers(viewModel.examID),
+            ),
           );
         }
 
@@ -276,7 +279,12 @@ class _PaperCard extends StatelessWidget {
                 children: [
                   Text(paper.name, style: context.bodyLarge!.copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.3)),
                   const SizedBox(height: 4),
-                  Text(paper.description, style: context.bodySmall!.copyWith(color: Colors.grey.shade600, fontSize: 12)),
+                  Text(
+                    paper.description,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.bodySmall!.copyWith(color: Colors.grey.shade600, fontSize: 12),
+                  ),
                 ],
               ),
             ),
